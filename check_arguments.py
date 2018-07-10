@@ -7,7 +7,7 @@
 def print_arguments(arguments):
     print("{} arguments provided on command line".format(len(arguments)))
     for x in range(len(arguments)):
-        print("Argument {}: {}".format(x, arguments[x]))
+        print("Argument {}: {}".format((x + 1), arguments[x]))
 
 """
 ********************************************************************************
@@ -16,10 +16,10 @@ def print_arguments(arguments):
 """
 
 def confirm_total(arguments):
-    if len(arguments) < 3:
+    if len(arguments) < 5:
         print("Too few arguments")
         exit(1)
-    elif len(arguments) > 3:
+    elif len(arguments) > 5:
         print("Too many arguments")
         exit(1)
     else:
@@ -31,7 +31,17 @@ def confirm_total(arguments):
 ********************************************************************************
 """
 
+def confirm_url(url):
+    print(url)
+
+"""
+********************************************************************************
+* Description: confirm_search_type function
+********************************************************************************
+"""
+
 def confirm_search_type(search_type):
+    print(search_type)
     if search_type != "breadth" and search_type != "depth":
         print("Search type is not valid")
         print("Search type must be breadth-first or depth-first")
@@ -67,4 +77,5 @@ def confirm_limit(number):
 """
 
 def confirm_keyword(keyword):
+    print(keyword)
     print("Need to implement keyword confirmation")

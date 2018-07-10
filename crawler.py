@@ -37,9 +37,10 @@ import check_arguments as conf                                                  
 def confirm_input():
     conf.print_arguments(sys.argv)                                              # Prints the arguments to the console (used for testing)
     conf.confirm_total(sys.argv)                                                # Confirms that the user input the appropriate number of arguments
-    conf.confirm_search_type(sys.argv[1])                                       # Confirms that the user input a valid search type (breadth or depth)
-    conf.confirm_limit(sys.argv[2])                                             # Confirms that the user input a numeric value as the search limit
-    conf.confirm_keyword(sys.argv[3])                                           # Confirms that the user input a single string keyword (no spaces)
+    conf.confirm_url(sys.argv[1])                                               # Confirms that a valid starting URL was provided by the user
+    conf.confirm_search_type(sys.argv[2])                                       # Confirms that the user input a valid search type (breadth or depth)
+    conf.confirm_limit(sys.argv[3])                                             # Confirms that the user input a numeric value as the search limit
+    conf.confirm_keyword(sys.argv[4])                                           # Confirms that the user input a single string keyword (no spaces)
 
 """
 ********************************************************************************
