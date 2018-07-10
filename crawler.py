@@ -19,42 +19,38 @@
 ********************************************************************************
 """
 
-import sys
+import sys                                                                      # Imports the default sys python library
+import check_arguments as conf                                                  # Imports the code from the check_arguments.py file (uses conf alias)
 
 """
 ********************************************************************************
-* Description: print_arguments function
+* Description: confirm_input function
+* Function is used to call functionins in the check_arguments.py file to confirm
+* that the appropriate arguments are provided to the program upon execution.  It
+* confirms the arguments total, the search type (breadth or depth), the search
+* limit (verify numeric), and the keyword (string with no spaces).  Most of this
+* functionality will already be performed by the web front end of the
+* application
 ********************************************************************************
 """
 
-def print_arguments():
-    print("{} arguments provided on command line".format(len(sys.argv)))
-    for x in range(len(sys.argv)):
-        print("Argument {}: {}".format(x, sys.argv[x]))
-
-"""
-********************************************************************************
-* Description: check_argument_total function
-********************************************************************************
-"""
-
-def check_argument_total():
-    if len(sys.argv) < 3:
-        print("Too few arguments")
-    elif len(sys.argv) > 3:
-        print("Too many arguments")
-    else:
-        print("Correct number of arguments")
+def confirm_input():
+    conf.print_arguments(sys.argv)                                              # Prints the arguments to the console (used for testing)
+    conf.confirm_total(sys.argv)                                                # Confirms that the user input the appropriate number of arguments
+    conf.confirm_search_type(sys.argv[1])                                       # Confirms that the user input a valid search type (breadth or depth)
+    conf.confirm_limit(sys.argv[2])                                             # Confirms that the user input a numeric value as the search limit
+    conf.confirm_keyword(sys.argv[3])                                           # Confirms that the user input a single string keyword (no spaces)
 
 """
 ********************************************************************************
 * Description: main function
+* Main function is used to orchestrate the crawler program and call function in
+* the appropriate order.
 ********************************************************************************
 """
 
 def main():
-    print_arguments()
-    check_argument_total()
+    confirm_input()
 
 if __name__ == '__main__':
     main()
