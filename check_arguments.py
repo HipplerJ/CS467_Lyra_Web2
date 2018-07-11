@@ -1,5 +1,23 @@
 """
 ********************************************************************************
+** Authors:
+** James Hippler (hipplerj@oregonstate.edu)
+**
+** Oregon State University
+** CS 467-400 (Summer 2018)
+** Online Capstone Project
+**
+** Project Group Lyra: Graphical Crawler (WEB2)
+** Description: Python Crawler Application for Breadth-First/Depth-First URL
+** web searches.
+** Due: Friday, August 17, 2018
+**
+** Filename: check_arguments.py
+********************************************************************************
+"""
+
+"""
+********************************************************************************
 * Description: print_arguments function
 ********************************************************************************
 """
@@ -16,7 +34,7 @@ def print_arguments(arguments):
 """
 
 def confirm_total(arguments):
-    if len(arguments) < 5:
+    if len(arguments) < 4:
         print("Too few arguments")
         exit(1)
     elif len(arguments) > 5:
@@ -32,7 +50,8 @@ def confirm_total(arguments):
 """
 
 def confirm_url(url):
-    print(url)
+    print("Starting URL: {}".format(url))
+    print("Need to implement URL validation")
 
 """
 ********************************************************************************
@@ -41,7 +60,7 @@ def confirm_url(url):
 """
 
 def confirm_search_type(search_type):
-    print(search_type)
+    print("Search Type: {}".format(search_type))
     if search_type != "breadth" and search_type != "depth":
         print("Search type is not valid")
         print("Search type must be breadth-first or depth-first")
@@ -60,7 +79,7 @@ def confirm_search_type(search_type):
 """
 
 def confirm_limit(number):
-    print(number)
+    print("Search Limit: {}".format(number))
     try:
         limit = int(number)
     except ValueError:
@@ -77,5 +96,5 @@ def confirm_limit(number):
 """
 
 def confirm_keyword(keyword):
-    print(keyword)
+    print("Keyword: {}".format(keyword))
     print("Need to implement keyword confirmation")

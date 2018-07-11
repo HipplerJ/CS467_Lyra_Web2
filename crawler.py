@@ -1,4 +1,3 @@
-
 #!/usr/bin/python
 
 """
@@ -21,6 +20,9 @@
 
 import sys                                                                      # Imports the default sys python library
 import check_arguments as conf                                                  # Imports the code from the check_arguments.py file (uses conf alias)
+import perform_crawl as crawl                                                   # Imports the code from the perform_crawl.py file (uses conf crawl)
+import breadth_first as bfs                                                     # Imports the code from the breadth_first.py file (uses bfs alias)
+import depth_first as dfs                                                       # Imports the code from the breadth_first.py file (uses bfs alias)
 
 """
 ********************************************************************************
@@ -40,7 +42,29 @@ def confirm_input():
     conf.confirm_url(sys.argv[1])                                               # Confirms that a valid starting URL was provided by the user
     conf.confirm_search_type(sys.argv[2])                                       # Confirms that the user input a valid search type (breadth or depth)
     conf.confirm_limit(sys.argv[3])                                             # Confirms that the user input a numeric value as the search limit
-    conf.confirm_keyword(sys.argv[4])                                           # Confirms that the user input a single string keyword (no spaces)
+    if len(sys.argv) == 5:                                                      # If user input 5 arguments, use the forth as the keyword
+        conf.confirm_keyword(sys.argv[4])                                       # Confirms that the user input a single string keyword (no spaces)
+
+"""
+********************************************************************************
+* Description: scrape_url function
+********************************************************************************
+"""
+
+def scrape_url():
+    crawl.collect_links(sys.argv[2])
+
+"""
+********************************************************************************
+* Description: initiate_search function
+********************************************************************************
+"""
+
+def initiate_search():
+    if sys.argv[2] == "breadth":                                                # If Search option Breadth-First was selected
+        bfs.BFS(sys.argv)                                                       # Call the appropriate function to perform BFS
+    if sys.argv[2] == "depth":                                                  # If Search option Depth-First was selected
+        dfs.DFS(sys.argv)                                                       # Call the appropriate function to perform DFS
 
 """
 ********************************************************************************
@@ -52,6 +76,9 @@ def confirm_input():
 
 def main():
     confirm_input()
+    scrap_url()
+    initiate_search()
+
 
 if __name__ == '__main__':
     main()
