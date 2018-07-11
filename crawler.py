@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 """
 ********************************************************************************
@@ -15,6 +15,9 @@
 ** Due: Friday, August 17, 2018
 **
 ** Filename: crawler.py
+**
+** External Resources:
+** - https://pythonspot.com/extract-links-from-webpage-beautifulsoup/
 ********************************************************************************
 """
 
@@ -42,7 +45,7 @@ def confirm_input():
     conf.confirm_url(sys.argv[1])                                               # Confirms that a valid starting URL was provided by the user
     conf.confirm_search_type(sys.argv[2])                                       # Confirms that the user input a valid search type (breadth or depth)
     conf.confirm_limit(sys.argv[3])                                             # Confirms that the user input a numeric value as the search limit
-    if len(sys.argv) == 5:                                                      # If user input 5 arguments, use the forth as the keyword
+    if len(sys.argv) == 5:                                                      # If user input 5 arguments, use the forth input as the keyword
         conf.confirm_keyword(sys.argv[4])                                       # Confirms that the user input a single string keyword (no spaces)
 
 """
@@ -52,7 +55,7 @@ def confirm_input():
 """
 
 def scrape_url():
-    crawl.collect_links(sys.argv[2])
+    crawl.collect_links(sys.argv[1])                                            # Scrape all links from a provided website
 
 """
 ********************************************************************************
@@ -75,10 +78,9 @@ def initiate_search():
 """
 
 def main():
-    confirm_input()
-    scrap_url()
-    initiate_search()
-
+    confirm_input()                                                             # Call function to confirm provided arguments are valid
+    scrap_url()                                                                 # Call function to collect Links (anchor tags) from pages
+    # initiate_search()                                                         # Call function to begin searching (breadth or depth first)
 
 if __name__ == '__main__':
-    main()
+    main()                                                                      # Call main function and begin the program

@@ -12,19 +12,37 @@
 ** web searches.
 ** Due: Friday, August 17, 2018
 **
-** Filename: crawler.py
+** Filename: perform_crawl.py
+**
+** External Resources:
+** - https://pythonspot.com/extract-links-from-webpage-beautifulsoup/
 ********************************************************************************
 """
 
-# import requests
-# from bs4 import BeautifulSoup
+import requests                                                                 # Import the requests python library to make HTML requests and download data
+from bs4 import BeautifulSoup                                                   # Import the BeautifulSoup library to navigate through HTML with Python
+import re
 
 """
 ********************************************************************************
 * Description: scrape_url function
-********
+********************************************************************************
 """
 
-def collect_links(starting_page):
-    print(starting_page)
-    print("Build the BeautifulSoup functionality here")
+def collect_links(url):
+    links = []
+    res = requests.get(url)                                                     # Get the content from the current webpage and assign to variable
+    soup = BeautifulSoup(res.text, "html.parser")                               # Parse the HTML text return from the res.text object
+    for link in soup.find_all('a', attrs={'href': re.compile("^http://")}):     # Find all anchor tags in the webpage and return to calling function
+        links.append(link.get('href'))
+    print_links(links)
+
+"""
+********************************************************************************
+* Description: print_links function
+********************************************************************************
+"""
+
+def print_links(links):
+    for x in range(len(links)):
+        print(links[x])
