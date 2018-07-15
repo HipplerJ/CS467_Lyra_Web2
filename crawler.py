@@ -29,6 +29,21 @@ import depth_first as dfs                                                       
 
 """
 ********************************************************************************
+* Description: confirm_keyword function
+* Function is used to confirm that the optional keyword was implemented by the
+* user and that the keyword is valid.
+********************************************************************************
+"""
+
+def confirm_keyword():
+    if len(sys.argv) == 5:                                                      # If user input 5 arguments, use the forth array element (5th Argument) as the keyword
+        conf.confirm_keyword(sys.argv[4])                                       # Confirms that the user input a single string keyword (no spaces)
+        return True                                                             # Return true indicating that the optional keyword exists
+    else:                                                                       # Otherwise, if only four arguments were issued
+        return False                                                            # Return False indicating that the optional keyword was not used
+
+"""
+********************************************************************************
 * Description: confirm_input function
 * Function is used to call functionins in the check_arguments.py file to confirm
 * that the appropriate arguments are provided to the program upon execution.  It
@@ -39,14 +54,12 @@ import depth_first as dfs                                                       
 ********************************************************************************
 """
 
-def confirm_input():
+def confirm_standard_input():
     conf.print_arguments(sys.argv)                                              # Prints the arguments to the console (used for testing)
     conf.confirm_total(sys.argv)                                                # Confirms that the user input the appropriate number of arguments
     conf.confirm_url(sys.argv[1])                                               # Confirms that a valid starting URL was provided by the user
     conf.confirm_search_type(sys.argv[2])                                       # Confirms that the user input a valid search type (breadth or depth)
     conf.confirm_limit(sys.argv[3])                                             # Confirms that the user input a numeric value as the search limit
-    if len(sys.argv) == 5:                                                      # If user input 5 arguments, use the forth input as the keyword
-        conf.confirm_keyword(sys.argv[4])                                       # Confirms that the user input a single string keyword (no spaces)
 
 """
 ********************************************************************************
@@ -78,9 +91,10 @@ def initiate_search():
 """
 
 def main():
-    confirm_input()                                                             # Call function to confirm provided arguments are valid
+    confirm_standard_input()                                                    # Call function to confirm provided arguments are valid
+    keyword = confirm_keyword()                                                 # Call function to confirm keyword input (if exists) and store returned boolean variable
     scrap_url()                                                                 # Call function to collect Links (anchor tags) from pages
-    # initiate_search()                                                         # Call function to begin searching (breadth or depth first)
+    initiate_search()                                                           # Call function to begin searching (breadth or depth first)
 
 if __name__ == '__main__':
     main()                                                                      # Call main function and begin the program
