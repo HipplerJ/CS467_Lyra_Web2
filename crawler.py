@@ -37,7 +37,7 @@ import depth_first as dfs                                                       
 
 def confirm_keyword():
     if len(sys.argv) == 5:                                                      # If user input 5 arguments, use the forth array element (5th Argument) as the keyword
-        conf.confirm_keyword(sys.argv[4])                                       # Confirms that the user input a single string keyword (no spaces)
+        # conf.confirm_keyword(sys.argv[4])                                     # Confirms that the user input a single string keyword (no spaces)
         return True                                                             # Return true indicating that the optional keyword exists
     else:                                                                       # Otherwise, if only four arguments were issued
         return False                                                            # Return False indicating that the optional keyword was not used
@@ -67,8 +67,11 @@ def confirm_standard_input():
 ********************************************************************************
 """
 
-def scrape_url():
-    crawl.collect_links(sys.argv[1])                                            # Scrape all links from a provided website
+def scrape_url(keyword):
+    soup = crawl.collect_page_details(sys.argv[1])                              # Call function to parse all HTML information from the specified URL
+    crawl.collect_links(soup)                                                   # Scrape all links from a provided website
+    if keyword:                                                                 # If the optional keyword was invoked
+        crawl.search_keyword(soup)                                              # Call function to search the page for the specified keyword
 
 """
 ********************************************************************************
@@ -91,10 +94,10 @@ def initiate_search():
 """
 
 def main():
-    confirm_standard_input()                                                    # Call function to confirm provided arguments are valid
+    # confirm_standard_input()                                                  # Call function to confirm provided arguments are valid
     keyword = confirm_keyword()                                                 # Call function to confirm keyword input (if exists) and store returned boolean variable
-    scrap_url()                                                                 # Call function to collect Links (anchor tags) from pages
-    initiate_search()                                                           # Call function to begin searching (breadth or depth first)
+    scrape_url(keyword)                                                         # Call function to collect Links (anchor tags) from pages
+    # initiate_search()                                                           # Call function to begin searching (breadth or depth first)
 
 if __name__ == '__main__':
     main()                                                                      # Call main function and begin the program

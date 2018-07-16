@@ -28,14 +28,31 @@ import re
 * Description: scrape_url function
 ********************************************************************************
 """
-
-def collect_links(url):
-    links = []
+def collect_page_details(url):
     res = requests.get(url)                                                     # Get the content from the current webpage and assign to variable
     soup = BeautifulSoup(res.text, "html.parser")                               # Parse the HTML text return from the res.text object
-    for link in soup.find_all('a', attrs={'href': re.compile("^http://")}):     # Find all anchor tags in the webpage and return to calling function
+    return soup
+
+"""
+********************************************************************************
+* Description: collect_links function
+********************************************************************************
+"""
+
+def collect_links(soup):
+    links = []
+    for link in soup.find_all('a', attrs={'href': re.compile("^https://")}):     # Find all anchor tags in the webpage and return to calling function
         links.append(link.get('href'))
     print_links(links)
+
+"""
+********************************************************************************
+* Description: search_keyword function
+********************************************************************************
+"""
+
+def search_keyword(soup):
+    print("Searching for keyword on page")
 
 """
 ********************************************************************************
