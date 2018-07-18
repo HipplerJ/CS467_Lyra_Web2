@@ -43,7 +43,8 @@ def collect_links(soup):
     links = []
     for link in soup.find_all('a', attrs={'href': re.compile("^https://")}):     # Find all anchor tags in the webpage and return to calling function
         links.append(link.get('href'))
-    print_links(links)
+    print(links)
+    # print_links(links)
 
 """
 ********************************************************************************
