@@ -16,12 +16,13 @@
 **
 ** External Resources:
 ** - https://pythonspot.com/extract-links-from-webpage-beautifulsoup/
+** - https://stackoverflow.com/questions/1080411/retrieve-links-from-web-
+**   page-using-python-and-beautifulsoup
 ********************************************************************************
 """
 
 import requests                                                                 # Import the requests python library to make HTML requests and download data
-from bs4 import BeautifulSoup                                                   # Import the BeautifulSoup library to navigate through HTML with Python
-import re
+from bs4 import BeautifulSoup, SoupStrainer                                     # Import the BeautifulSoup library to navigate through HTML with Python
 
 """
 ********************************************************************************
@@ -35,12 +36,12 @@ def parse_html(webpage):
 
 """
 ********************************************************************************
-* Description: scrape_url function
+* Description: collect_page_details function
 ********************************************************************************
 """
 def collect_page_details(url):
     res = requests.get(url)                                                     # Get the content from the current webpage and assign to variable
-    soup = BeautifulSoup(res.text, "html.parser")                               # Parse the HTML text return from the res.text object
+    soup = BeautifulSoup(res.text, "html.parser")                               # Parse the HTML text return from the res.text object (Return beautiful soup object)
     return soup
 
 """
@@ -50,8 +51,8 @@ def collect_page_details(url):
 """
 
 def scrape_urls(soup):
-    url_list = collect_links(soup)                                        # Scrape all links from a provided website
-    return url_list                                                             #
+    url_list = collect_links(soup)                                              # Scrape all links from a provided website
+    return url_list                                                             # Return the list of URLs (anchor tags that were found on the page)
 
 """
 ********************************************************************************
@@ -61,18 +62,28 @@ def scrape_urls(soup):
 
 def collect_links(soup):
     links = []
-    for link in soup.find_all('a', attrs={'href': re.compile("^https://")}):     # Find all anchor tags in the webpage and return to calling function
+    for link in soup.find_all('a'):                                             # Find all anchor tags in the webpage and return to calling function
         links.append(link.get('href'))
-    print(links)
-    # print_links(links)
+    return(links)
 
+"""
+********************************************************************************
+* Description: collect_names function
+********************************************************************************
+"""
+
+def collect_names(links):
+    link_names = []
+    for link in links:
+        print(a.find("a").get_text())
+    return link_names
 """
 ********************************************************************************
 * Description: search_keyword function
 ********************************************************************************
 """
 
-def search_keyword(soup):
+def search_keyword(soup, keyword):
     print("Searching for keyword on page")
 
 """

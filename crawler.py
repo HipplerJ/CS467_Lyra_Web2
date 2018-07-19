@@ -24,6 +24,7 @@
 import sys                                                                      # Imports the default sys python library
 import check_arguments as conf                                                  # Imports the code from the check_arguments.py file (uses conf alias)
 import perform_crawl as crawl                                                   # Imports the code from the perform_crawl.py file (uses conf crawl)
+import send_data as send
 
 """
 ********************************************************************************
@@ -47,19 +48,13 @@ def confirm_keyword():
 
 def web_crawler(keyword_used):
     soup = crawl.parse_html(sys.argv[1])                                        # Call function to grab HTML information from the specified web page (Send the page)
-    urls_list = crawl.scrape_urls(soup)                                         # Call function to collect Links (anchor tags) from pages
-    if keyword_used:                                                            # If the user decided to implement a keyword search
-        print(keyword_used)                                                     # Also search the page for the keyword and possibly end if necessary
+    url_list = crawl.scrape_urls(soup)                                          # Call function to collect Links (anchor tags) from pages
+    link_names = crawl.collect_names(soup)
+    print(url_list)
+    # if keyword_used:                                                            # If the user decided to implement a keyword search
+    #     crawl.search_keyword(soup, sys.argv[4])                                 # Call function to search the page for the specified keyword
+    # send.write_json(urls_list)
     # initiate_search()                                                         # Call function to begin searching (breadth or depth first)
-
-"""
-********************************************************************************
-* Description: scrape_urls function
-********************************************************************************
-"""
-
-def search_keyword(keyword):
-    crawl.search_keyword(soup)                                                  # Call function to search the page for the specified keyword
 
 """
 ********************************************************************************
@@ -105,5 +100,5 @@ def main():
     keyword_used = confirm_keyword()                                            # Call function to confirm keyword input (if exists) and store returned boolean variable
     web_crawler(keyword_used)                                                   # Call function that will perform the web crawling functionality
 
-if __name__ == '__main__':
+if __name__ == '__main__':                                                      # Initialize the main function in Python
     main()                                                                      # Call main function and begin the program
