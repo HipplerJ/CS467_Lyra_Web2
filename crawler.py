@@ -46,32 +46,11 @@ def confirm_keyword():
 """
 
 def web_crawler(keyword_used):
-    soup = parse_html()                                                         # Call the function to grab HTML information from the specified web page
-    urls_list = scrape_urls(soup)                                               # Call function to collect Links (anchor tags) from pages
+    soup = crawl.parse_html(sys.argv[1])                                        # Call function to grab HTML information from the specified web page (Send the page)
+    urls_list = crawl.scrape_urls(soup)                                         # Call function to collect Links (anchor tags) from pages
     if keyword_used:                                                            # If the user decided to implement a keyword search
         print(keyword_used)                                                     # Also search the page for the keyword and possibly end if necessary
     # initiate_search()                                                         # Call function to begin searching (breadth or depth first)
-
-
-"""
-********************************************************************************
-* Description: parse_html function
-********************************************************************************
-"""
-
-def parse_html():
-    soup = crawl.collect_page_details(sys.argv[1])                              # Call function to parse all HTML information from the specified URL
-    return soup
-
-"""
-********************************************************************************
-* Description: scrape_urls function
-********************************************************************************
-"""
-
-def scrape_urls(soup):
-    url_list = crawl.collect_links(soup)                                        # Scrape all links from a provided website
-    return url_list                                                             #
 
 """
 ********************************************************************************

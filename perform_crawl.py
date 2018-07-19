@@ -25,6 +25,16 @@ import re
 
 """
 ********************************************************************************
+* Description: parse_html function
+********************************************************************************
+"""
+
+def parse_html(webpage):
+    soup = collect_page_details(webpage)                                        # Call function to parse all HTML information from the specified URL
+    return soup                                                                 # Return the HTML information to the calling function
+
+"""
+********************************************************************************
 * Description: scrape_url function
 ********************************************************************************
 """
@@ -32,6 +42,16 @@ def collect_page_details(url):
     res = requests.get(url)                                                     # Get the content from the current webpage and assign to variable
     soup = BeautifulSoup(res.text, "html.parser")                               # Parse the HTML text return from the res.text object
     return soup
+
+"""
+********************************************************************************
+* Description: scrape_urls function
+********************************************************************************
+"""
+
+def scrape_urls(soup):
+    url_list = collect_links(soup)                                        # Scrape all links from a provided website
+    return url_list                                                             #
 
 """
 ********************************************************************************
