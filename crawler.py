@@ -24,8 +24,6 @@
 import sys                                                                      # Imports the default sys python library
 import check_arguments as conf                                                  # Imports the code from the check_arguments.py file (uses conf alias)
 import perform_crawl as crawl                                                   # Imports the code from the perform_crawl.py file (uses conf crawl)
-import breadth_first as bfs                                                     # Imports the code from the breadth_first.py file (uses bfs alias)
-import depth_first as dfs                                                       # Imports the code from the breadth_first.py file (uses bfs alias)
 
 """
 ********************************************************************************
@@ -40,6 +38,20 @@ def confirm_keyword():
         return True                                                             # Return true indicating that the optional keyword exists
     else:                                                                       # Otherwise, if only four arguments were issued
         return False                                                            # Return False indicating that the optional keyword was not used
+
+"""
+********************************************************************************
+* Description: web_crawler function
+********************************************************************************
+"""
+
+def web_crawler(keyword_used):
+    soup = parse_html()                                                         # Call the function to grab HTML information from the specified web page
+    urls_list = scrape_urls(soup)                                               # Call function to collect Links (anchor tags) from pages
+    if keyword_used:                                                            # If the user decided to implement a keyword search
+        print(keyword_used)                                                     # Also search the page for the keyword and possibly end if necessary
+    # initiate_search()                                                         # Call function to begin searching (breadth or depth first)
+
 
 """
 ********************************************************************************
@@ -110,17 +122,9 @@ def initiate_search():
 """
 
 def main():
-    # confirm_standard_input()                                                  # Call function to confirm provided arguments are valid
-    for x in range(int(sys.argv[3])):
-        keyword_used = confirm_keyword()                                        # Call function to confirm keyword input (if exists) and store returned boolean variable
-        print(keyword_used)
-        soup = parse_html()
-        print(soup)
-        urls_list = scrape_urls(soup)                                           # Call function to collect Links (anchor tags) from pages
-        print(urls_list)
-        if keyword_used:
-            print(keyword_used)
-        # initiate_search()                                                     # Call function to begin searching (breadth or depth first)
+    confirm_standard_input()                                                    # Call function to confirm provided arguments are valid
+    keyword_used = confirm_keyword()                                            # Call function to confirm keyword input (if exists) and store returned boolean variable
+    web_crawler(keyword_used)                                                   # Call function that will perform the web crawling functionality
 
 if __name__ == '__main__':
     main()                                                                      # Call main function and begin the program
