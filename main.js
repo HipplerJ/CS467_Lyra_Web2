@@ -26,11 +26,17 @@ app.get('/display', function(req,res){
 // FIXME User posts input here (currently displays submitted data)
 app.post('/post-data', function(req,res){
   var postData = "";
+
+  // FIXME testing successful posting
   for (var prop in req.body)
   {
     postData += "<li>" + prop + ": " + req.body[prop] + " </li>";
   }
   res.render('post-data', {list:postData});
+
+
+  // TODO redirect to progress bar page OR graphical display page
+  // if we can draw it in real time
 });
 
 // TODO progress bar page handler
