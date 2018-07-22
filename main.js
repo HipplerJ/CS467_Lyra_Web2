@@ -15,13 +15,11 @@ app.get('/',function(req,res){
   res.render('home');
 });
 
-
 app.get('/display', function(req,res){
   var context = {};
   context.msg = "get request to graphical display page";
   res.render('display', context);
 });
-
 
 // TODO post handler for user input - posts to display
 app.post('/post-data', function(req,res){
@@ -29,18 +27,11 @@ app.post('/post-data', function(req,res){
   for (var prop in req.body)
   {
     postData += "<li>" + prop + ": " + req.body[prop] + " </li>";
-    // postData += "<li>" + prop + " </li>";
-
-    // postData += "<li>" + req.body[prop] + " </li>";
   }
   res.render('post-data', {list:postData});
 });
 
-
 // TODO progress bar page handler
-
-
-
 
 app.use(function(req,res){
   res.status(404);
