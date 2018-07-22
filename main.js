@@ -11,17 +11,19 @@ app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', 3000); // FIXME - get portno from user
 
+// Homepage - user input forms
 app.get('/',function(req,res){
   res.render('home');
 });
 
+// Graphical display page
 app.get('/display', function(req,res){
   var context = {};
   context.msg = "get request to graphical display page";
   res.render('display', context);
 });
 
-// TODO post handler for user input - posts to display
+// FIXME User posts input here (currently displays submitted data)
 app.post('/post-data', function(req,res){
   var postData = "";
   for (var prop in req.body)
