@@ -34,9 +34,6 @@ app.post('/post-data', function(req,res){
   for (var prop in req.body)
   {
     postData += "<li>" + prop + ": " + req.body[prop] + " </li>";
-    // postData += "<li>" + prop + " </li>";
-
-    // postData += "<li>" + req.body[prop] + " </li>";
   }
   res.render('post-data', {list:postData});
 });
