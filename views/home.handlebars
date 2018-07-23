@@ -1,0 +1,54 @@
+<div class="container">
+
+  <div class="jumbotron">
+    <h1>CS467 Project Lyra Home Page</h1>
+  </div>
+
+  <!-- TODO error message div -->
+
+  <!-- Crawl Input Form -->
+  <form class="" action="/post-data" method="post">
+
+    <fieldset>
+      <legend>Crawl Specifications</legend>
+
+        <!-- Web page to begin crawl from -->
+        <label>Starting Web Page:
+          <input type="text" name="start page" size="50" maxlength="300" required>
+        </label>
+        <br>
+
+        <!-- TODO previous starting page dropdown -->
+
+        <!-- BFS || DFS radio selector -->
+        <p>Crawl Type:
+          <br>
+          <label>
+            <input type="radio" name="crawl type" value="bfs" required>Breadth-First Crawl
+          </label>
+          <br>
+          <label>
+            <input type="radio" name="crawl type" value="dfs">Depth-First Crawl
+          </label>
+          <br>
+        </p>
+
+        <!-- Number of steps -->
+        <!-- FIXME: agree upon maximum number of steps -->
+        <label>Number of steps (max 100):
+          <input type="number" name="steps" min="1" max="100" required>
+        </label>
+        <br>
+
+        <!-- Optional Keyword -->
+        <label>Keyword (optional):
+          <input type="text" name="keyword" size="50" maxlength="300">
+        </label>
+        <br>
+
+        <!-- Submit button -->
+        <input type="submit" value="Submit">
+
+    </fieldset>
+  </form>
+</div>
