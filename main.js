@@ -16,7 +16,7 @@ app.get('/',function(req,res){
   res.render('home');
 });
 
-// Graphical display page
+// TODO Graphical display page
 app.get('/display', function(req,res){
   var context = {};
   context.msg = "get request to graphical display page";
