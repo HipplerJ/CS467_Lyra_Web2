@@ -11,6 +11,10 @@ app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', 3000); // FIXME - get portno from user
 
+// serve files from public directory
+// https://expressjs.com/en/starter/static-files.html
+app.use(express.static('public'));
+
 // Homepage - user input forms
 app.get('/',function(req,res){
   res.render('home');
