@@ -32,7 +32,7 @@ Tools and Technology Requirements:
 - Do not use Django or any form of Content Management System (CMS) to build the pages or site for you.
 - You may use Node.js, bootstrap, React, Angular, and/or jQuery, etc. if you like.
 
-Recommend Division of Labor:
+Recommended Division of Labor:
 
 1. Crawler Developer: writes the software that will crawl the world wide web, recording what it finds.
 2. Data Transfer Developer: creates the format of the log files written by the crawler, and writes the handling of transmitting the data back and forth from the web page to the crawler. Perhaps also programs the encapsulating website hosting the UI.
