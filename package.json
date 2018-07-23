@@ -1,8 +1,8 @@
 {
-  "name": "hello-world",
+  "name": "Project Lyra",
   "version": "1.0.0",
-  "description": "Hello world with express and node.js",
-  "main": "app.js",
+  "description": "CS 467-400 Group Lyra Project",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,6 +14,7 @@
     "express-handlebars": "^2.0.1",
     "express-session": "^1.11.3",
     "forever": "^0.15.3",
-    "mysql": "^2.8.0"
+    "mysql": "^2.8.0",
+    "request": "^2.85.0"
   }
 }
