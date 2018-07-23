@@ -1,3 +1,31 @@
-<ul>
-  {{{list}}}
-</ul>
+<div class="container">
+
+  <div class="jumbotron">
+    <h1>Midpoint Display Page</h1>
+  </div>
+
+  <!-- display posted data -->
+  <h2>Posted Data:</h2>
+  <ul>
+    {{{list}}}
+  </ul>
+
+
+
+  <!-- Demonstrate arbor.js -->
+  <h2>Data Visualization Example (Dummy Data)</h2>
+  <!-- arbor demo from https://gist.github.com/RC1140/1036344/372f96bc3efd344f274a1440e2a4f3ff07d9f87d -->
+  <!-- http://blog.thinkst.com/2011/06/simple-graphs-with-arborjs.html -->
+
+  <canvas id="viewport" width="800" height="600"></canvas>
+  <script language="javascript" type="text/javascript">
+      var sys = arbor.ParticleSystem(1000, 400,1);
+      sys.parameters({gravity:true});
+      sys.renderer = Renderer("#viewport") ;
+      var animals = sys.addNode('Animals',{'color':'red','shape':'dot','label':'Animals'});
+      var dog = sys.addNode('dog',{'color':'green','shape':'dot','label':'dog'});
+      var cat = sys.addNode('cat',{'color':'blue','shape':'dot','label':'cat'});
+      sys.addEdge(animals, dog);
+      sys.addEdge(animals, cat);
+  </script>
+</div>
