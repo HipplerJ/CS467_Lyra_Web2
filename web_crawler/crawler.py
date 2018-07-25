@@ -23,23 +23,24 @@
 
 import sys                                                                      # Imports the default sys python library
 import random                                                                   # Imports the python random library
+import search_state as search                                                   # Imports the Class code from the search_state file (uses search as alias)
 import check_arguments as conf                                                  # Imports the code from the check_arguments.py file (uses conf alias)
 import perform_crawl as crawl                                                   # Imports the code from the perform_crawl.py file (uses crawl alias)
 import send_data as send                                                        # Imports the code from the send_data.py file (uses send alias)
 
-"""
-********************************************************************************
-* Description: confirm_keyword function
-* Function is used to confirm that the optional keyword was implemented by the
-* user and that the keyword is valid.
-********************************************************************************
-"""
-
-def confirm_keyword():
-    if len(sys.argv) == 5:                                                      # If user input 5 arguments, use the forth array element (5th Argument) as the keyword
-        return True                                                             # Return true indicating that the optional keyword exists
-    else:                                                                       # Otherwise, if only four arguments were issued
-        return False                                                            # Return False indicating that the optional keyword was not used
+# """
+# ********************************************************************************
+# * Description: confirm_keyword function
+# * Function is used to confirm that the optional keyword was implemented by the
+# * user and that the keyword is valid.
+# ********************************************************************************
+# """
+#
+# def confirm_keyword():
+#     if len(sys.argv) == 5:                                                      # If user input 5 arguments, use the forth array element (5th Argument) as the keyword
+#         return True                                                             # Return true indicating that the optional keyword exists
+#     else:                                                                       # Otherwise, if only four arguments were issued
+#         return False                                                            # Return False indicating that the optional keyword was not used
 
 """
 ********************************************************************************
@@ -141,14 +142,17 @@ def confirm_standard_input():
 """
 
 def main():
-    # confirm_standard_input()                                                  # Call function to confirm provided arguments are valid
-    start_url = sys.argv[1]                                                     # Set the starting URL to the value provided on the command line when the program was started
-    search_limit = int(sys.argv[3])                                             # Set the search limit to the value provided on the command line when the program was started
-    keyword_used = confirm_keyword()                                            # Call function to confirm keyword input (if exists) and store returned boolean variable
-    if sys.argv[2] == "breadth":                                                # If Search option Breadth-First was selected
-        dfs(start_url, search_limit, keyword_used)                              # Call the appropriate function to perform BFS
-    if sys.argv[2] == "depth":                                                  # If Search option Depth-First was selected
-        dfs(start_url, search_limit, keyword_used)                              # Call the appropriate function to perform DFS
+    state = search.search_state()                                               # Instantiate the search_state Object
+    state.initialize_state(sys.argv)                                            # Call search_state object function to initialize search parameters
+
+    # # confirm_standard_input()                                                  # Call function to confirm provided arguments are valid
+    # start_url = sys.argv[1]                                                     # Set the starting URL to the value provided on the command line when the program was started
+    # search_limit = int(sys.argv[3])                                             # Set the search limit to the value provided on the command line when the program was started
+    # keyword_used = confirm_keyword()                                            # Call function to confirm keyword input (if exists) and store returned boolean variable
+    # if sys.argv[2] == "breadth":                                                # If Search option Breadth-First was selected
+    #     dfs(start_url, search_limit, keyword_used)                              # Call the appropriate function to perform BFS
+    # if sys.argv[2] == "depth":                                                  # If Search option Depth-First was selected
+    #     dfs(start_url, search_limit, keyword_used)                              # Call the appropriate function to perform DFS
 
 if __name__ == '__main__':                                                      # Initialize the main function in Python
     main()                                                                      # Call main function and begin the program
