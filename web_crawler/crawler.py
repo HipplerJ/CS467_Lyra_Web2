@@ -22,25 +22,9 @@
 """
 
 import sys                                                                      # Imports the default sys python library
-import random                                                                   # Imports the python random library
-import search_state as search                                                   # Imports the Class code from the search_state file (uses search as alias)
-import check_arguments as conf                                                  # Imports the code from the check_arguments.py file (uses conf alias)
+import search_state                                                             # Imports the Class code from the search_state file
 import perform_crawl as crawl                                                   # Imports the code from the perform_crawl.py file (uses crawl alias)
 import send_data as send                                                        # Imports the code from the send_data.py file (uses send alias)
-
-# """
-# ********************************************************************************
-# * Description: confirm_keyword function
-# * Function is used to confirm that the optional keyword was implemented by the
-# * user and that the keyword is valid.
-# ********************************************************************************
-# """
-#
-# def confirm_keyword():
-#     if len(sys.argv) == 5:                                                      # If user input 5 arguments, use the forth array element (5th Argument) as the keyword
-#         return True                                                             # Return true indicating that the optional keyword exists
-#     else:                                                                       # Otherwise, if only four arguments were issued
-#         return False                                                            # Return False indicating that the optional keyword was not used
 
 """
 ********************************************************************************
@@ -89,7 +73,7 @@ def dfs(start_url, search_limit, keyword_used):
         #     keyword = sys.argv[4]                                             # Set the optional keyword to the value provided on the command line when the program was started
         #     keyword_found = search_keyword()                                  # Search for keyword on the current page and end the process if found
         send_data_server(start_url, url_list, x)                                # Call function necessary for packaging and shipping the current page and it's URL connections
-        start_url = select_random_url(url_list)
+        start_url = crawl.select_random_url(url_list)
 
 """
 ********************************************************************************
@@ -105,36 +89,6 @@ def send_data_server(start_url, url_list, depth):
 
 """
 ********************************************************************************
-* Description: select_random_url function
-* Function is used to select a URL from the list at random during depth first
-* Web crawls
-********************************************************************************
-"""
-
-def select_random_url(url_list):
-    return(random.choice(url_list))                                             # Return a randomly selected URL from the list
-
-"""
-********************************************************************************
-* Description: confirm_input function
-* Function is used to call functionins in the check_arguments.py file to confirm
-* that the appropriate arguments are provided to the program upon execution.  It
-* confirms the arguments total, the search type (breadth or depth), the search
-* limit (verify numeric), and the keyword (string with no spaces).  Most of this
-* functionality will already be performed by the web front end of the
-* application
-********************************************************************************
-"""
-
-def confirm_standard_input():
-    conf.print_arguments(sys.argv)                                              # Prints the arguments to the console (used for testing)
-    conf.confirm_total(sys.argv)                                                # Confirms that the user input the appropriate number of arguments
-    conf.confirm_url(sys.argv[1])                                               # Confirms that a valid starting URL was provided by the user
-    conf.confirm_search_type(sys.argv[2])                                       # Confirms that the user input a valid search type (breadth or depth)
-    conf.confirm_limit(sys.argv[3])                                             # Confirms that the user input a numeric value as the search limit
-
-"""
-********************************************************************************
 * Description: main function
 * Main function is used to orchestrate the crawler program and call function in
 * the appropriate order.
@@ -142,17 +96,8 @@ def confirm_standard_input():
 """
 
 def main():
-    state = search.search_state()                                               # Instantiate the search_state Object
+    state = search_state.search_state()                                         # Instantiate the search_state Class Object
     state.initialize_state(sys.argv)                                            # Call search_state object function to initialize search parameters
-
-    # # confirm_standard_input()                                                  # Call function to confirm provided arguments are valid
-    # start_url = sys.argv[1]                                                     # Set the starting URL to the value provided on the command line when the program was started
-    # search_limit = int(sys.argv[3])                                             # Set the search limit to the value provided on the command line when the program was started
-    # keyword_used = confirm_keyword()                                            # Call function to confirm keyword input (if exists) and store returned boolean variable
-    # if sys.argv[2] == "breadth":                                                # If Search option Breadth-First was selected
-    #     dfs(start_url, search_limit, keyword_used)                              # Call the appropriate function to perform BFS
-    # if sys.argv[2] == "depth":                                                  # If Search option Depth-First was selected
-    #     dfs(start_url, search_limit, keyword_used)                              # Call the appropriate function to perform DFS
 
 if __name__ == '__main__':                                                      # Initialize the main function in Python
     main()                                                                      # Call main function and begin the program

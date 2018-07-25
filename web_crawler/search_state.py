@@ -12,7 +12,7 @@
 ** web searches.
 ** Due: Friday, August 17, 2018
 **
-** Filename: crawler.py
+** Filename: search_state.py
 ********************************************************************************
 """
 
@@ -28,7 +28,7 @@ class search_state():
     breadth_search = None                                                       # Create variable to determine if Breadth search is Used (Initialize to None)
     depth_search = None                                                         # Create variable to determine if Depth search is Used (Initialize to None)
     keyword_used = None                                                         # Create variable to determine if the optional keyword was included (Initialize to None)
-    keyword = False                                                             # Create variable for the optional keyword string (Initializae to None)
+    keyword = False                                                             # Create variable for the optional keyword string (Initializae to False)
 
     """
     ****************************************************************************
@@ -37,12 +37,12 @@ class search_state():
     """
 
     def initialize_state(self, arguments):
-        self.num_args(arguments)
-        self.start_page(arguments[1])
-        self.search_type(arguments[2])
-        self.depth_limit(arguments[3])
-        if self.num_arguments == 5:
-            self.set_keyword(arguments[4])
+        self.num_args(arguments)                                                # Call the function to reference and store the number of arguments
+        self.start_page(arguments[1])                                           # Call the function to reference and store the starting URL
+        self.search_type(arguments[2])                                          # Call the function to reference and store the search type
+        self.depth_limit(arguments[3])                                          # Call the function to reference and store the limit for the search depth
+        if self.num_arguments == 5:                                             # If the number of the arguments is five then then the optional keyword was input
+            self.set_keyword(arguments[4])                                      # Call the function to  reference and store the keyword elements
 
     """
     ****************************************************************************

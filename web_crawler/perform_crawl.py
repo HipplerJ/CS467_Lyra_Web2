@@ -21,6 +21,7 @@
 ********************************************************************************
 """
 
+import random                                                                   # Imports the python random library
 import requests                                                                 # Import the requests python library to make HTML requests and download data
 from bs4 import BeautifulSoup, SoupStrainer                                     # Import the BeautifulSoup library to navigate through HTML with Python
 
@@ -83,3 +84,14 @@ def collect_names(links):
 
 def search_keyword(soup, keyword):
     print("Searching for keyword on page")
+
+"""
+********************************************************************************
+* Description: select_random_url function
+* Function is used to select a URL from the list at random during depth first
+* Web crawls
+********************************************************************************
+"""
+
+def select_random_url(url_list):
+    return(random.choice(url_list))                                             # Return a randomly selected URL from the list

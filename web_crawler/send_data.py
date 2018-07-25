@@ -20,9 +20,9 @@
 ********************************************************************************
 """
 
-from collections import defaultdict                                             # Import the library necessary for generating a default dictionary (defaultdict)
 import json                                                                     # Import the library necessary for exporting data to a json file
 import os                                                                       # Import the os library necessary for checking and creating directories
+from collections import defaultdict                                             # Import the library necessary for generating a default dictionary (defaultdict)
 
 """
 ********************************************************************************
