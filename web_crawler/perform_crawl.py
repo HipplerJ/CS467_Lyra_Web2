@@ -25,7 +25,7 @@
 
 import random                                                                   # Imports the python random library
 import requests                                                                 # Import the requests python library to make HTML requests and download data
-from bs4 import BeautifulSoup, SoupStrainer                                     # Import the BeautifulSoup library to navigate through HTML with Python
+from bs4 import BeautifulSoup                                                   # Import the BeautifulSoup library to navigate through HTML with Python
 import send_data as send                                                        # Imports the code from the send_data.py file (uses send alias)
 
 """
