@@ -27,6 +27,7 @@ class search_state():
     starting_url = None                                                         # Create variable for the starting URL (Initialize to None)
     breadth_search = None                                                       # Create variable to determine if Breadth search is Used (Initialize to None)
     depth_search = None                                                         # Create variable to determine if Depth search is Used (Initialize to None)
+    depth = None                                                                # Create variable for the search limit depth (Initialize to N)
     keyword_used = None                                                         # Create variable to determine if the optional keyword was included (Initialize to None)
     keyword = False                                                             # Create variable for the optional keyword string (Initializae to False)
 

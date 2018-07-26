@@ -26,6 +26,18 @@ from collections import defaultdict                                             
 
 """
 ********************************************************************************
+* Description: send_data_server function
+* Function that packages and writes the URL graphs.  Write each node as they
+* become available in order to stream data.
+********************************************************************************
+"""
+
+def send_data_server(start_url, url_list, depth):
+    data = package_content(start_url, url_list)                                 # Create the dictionary (graph) relationship between the node and it's URLS
+    write_json(data, depth)                                                     # Write the information to a .json file
+
+"""
+********************************************************************************
 * Description: package_content function
 * Function takes the starting url and all the associated URL links located on
 * the page and creates a dictionary with this information.  The graph is
