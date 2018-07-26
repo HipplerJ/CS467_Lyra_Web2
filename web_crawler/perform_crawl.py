@@ -117,10 +117,10 @@ def collect_page_details(url):
 def collect_links(url, soup):
     links = []                                                                  # Establish an empty list that will eventually hold the list of urls
     for anchor in soup.find_all('a', href=True):                                # Loop through each anchor tag found in the parsed BeautifulSoup Object
-        # if not anchor.get('href').startswith("http"):                           # If the found URL does not begin with http or https
-        #     page = url + anchor.get('href')                                     # Add the initial full URL name to the beginning of the string
-        # else:                                                                   # Otherwise
-        page = anchor.get('href')                                           # Just use the name that was found by the scraper
+        if not anchor.get('href').startswith("http"):                           # If the found URL does not begin with http or https
+            page = url + anchor.get('href')                                     # Add the initial full URL name to the beginning of the string
+        else:                                                                   # Otherwise
+            page = anchor.get('href')                                           # Just use the name that was found by the scraper
         links.append(page)                                                      # Append the URL link to the list
     return links                                                                # Return the URL links list to the calling function
 
