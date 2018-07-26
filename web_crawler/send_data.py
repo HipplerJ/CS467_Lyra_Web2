@@ -17,6 +17,9 @@
 ** External Resources:
 ** - https://stackoverflow.com/questions/12309269/how-do-i-write-json-data-to-
 **   a-file
+** - https://stackoverflow.com/questions/8634473/sending-json-request-with-
+**   python
+** - http://docs.python-requests.org/en/latest/user/advanced/#event-hooks
 ********************************************************************************
 """
 
