@@ -38,9 +38,9 @@ import send_data as send                                                        
 """
 
 def start_search(state):
-    if state.breadth_search == True:
+    if state.breadth_search:
         breadth_first_search(state, state.starting_url)
-    if state.depth_search == True:
+    if state.depth_search:
         depth_first_search(state, state.starting_url)
 
 """
@@ -69,8 +69,8 @@ def breadth_first_search(state, url):
 def depth_first_search(state, url):
     for x in range(state.depth):                                                # Continue searching pages until the search limit is reached
         soup, url_list = search_urls(url)                                       # Call function that will perform the web crawling functionality
-        if state.keyword_used:                                                  # If the optional keyword is input by the user
-            search_keyword(soup, state.keyword)
+        # if state.keyword_used:                                                  # If the optional keyword is input by the user
+        #     search_keyword(soup, state.keyword)
         send.send_data_server(url, url_list, x)                                 # Call function necessary for packaging and shipping the current page and it's URL connections
         url = select_random_url(url_list)
 

@@ -37,6 +37,7 @@ from collections import defaultdict                                             
 
 def send_data_server(start_url, url_list, depth):
     data = package_content(start_url, url_list)                                 # Create the dictionary (graph) relationship between the node and it's URLS
+    print(data)
     write_json(data, depth)                                                     # Write the information to a .json file
 
 """
