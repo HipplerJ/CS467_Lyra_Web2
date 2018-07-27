@@ -1,0 +1,10 @@
+# Ignore python cache files & directory
+__pycache__/
+.pyc
+
+# Ignore crawler results files & directory
+crawler_results/
+
+# Ignore node module files & directory
+node_modules/
+package-lock.json
