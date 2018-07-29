@@ -1,7 +1,7 @@
 <div class="container">
 
   <div class="jumbotron">
-    <h1>Midpoint Display Page</h1>
+    <h1>Crawler Results</h1>
   </div>
 
   <!-- display posted data -->
@@ -11,15 +11,18 @@
   </ul>
 
   <!-- Demonstrate arbor.js -->
-  <h2>Data Visualization Example (Dummy Data)</h2>
+  <h2>Data Visualization Example</h2>
 
-  <div id="testdata">
-
-  </div>
   <!-- arbor demo from https://gist.github.com/RC1140/1036344/372f96bc3efd344f274a1440e2a4f3ff07d9f87d -->
   <!-- http://blog.thinkst.com/2011/06/simple-graphs-with-arborjs.html -->
+  <canvas id="viewport" width="800" height="600" style="border:1px solid black"></canvas>
 
-  <canvas id="viewport" width="800" height="600"></canvas>
+
+  <h2>Dummy JSON data (from file)</h2>
+  <!-- append/print test json file data as child of this div -->
+  <div id="testdata"></div>
+
+  <!-- script that opens json file and draws graph of json objects -->
   <script language="javascript" type="text/javascript" src="/js/draw-results.js"></script>
 
 </div>
