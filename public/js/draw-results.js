@@ -32,3 +32,17 @@ var node2 = sys.addNode('url-2',{'color':'green','shape':'rectangle','label':'fa
 var node3 = sys.addNode('url-3',{'color':'blue','shape':'rectangle','label':'google.com'});
 sys.addEdge(node1, node2);
 sys.addEdge(node1, node3);
+
+// resize canvas to window size
+var canvas = $('canvas');
+canvas.width('100%');
+canvas.height('auto');
+
+
+// window resize listener - resize canvas to window size
+$(window).resize(function(){
+  canvas.width('100%');
+  canvas.height('auto');
+})
+
+// particleSystem.screenSize(w,h);
