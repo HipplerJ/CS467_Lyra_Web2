@@ -17,32 +17,26 @@ $(window).resize(function(){
   canvas.height('auto');
 })
 
+
 // test: open dummy json file with .getJSON and display contents using $.getJSON
 $.getJSON('json/test-data.json', function(data){
 
-  // log to console
-  console.log(data); //WORKS
+  var nodes = data.nodes
 
-  // print out json file data
+  // add label to each node - same as name (key)
+  $.each(nodes, function(key, value){
+    value.label=key
+  })
+
+  // FIXME trace: display json file data in page
   // reference: https://api.jquery.com/jquery.getjson/
-  var items = [];
-  $.each( data, function( key, val ) {
-    items.push( "<li id='" + JSON.stringify(key) + "'>" + JSON.stringify(val) + "</li>" );
-  });
+  test_data.text(JSON.stringify(data));
 
-  $( "<ul/>", {
-    "class": "my-new-list",
-    html: items.join( "" )
-  }).appendTo( test_data );
-
-
-  // TODO draw the data
+  // draw the data
   sys.graft({nodes:data.nodes, edges:data.edges});
 
 
 });
-
-
 
 
 // FIXME first example - draw 3 node graph using arbor.js
@@ -51,8 +45,4 @@ $.getJSON('json/test-data.json', function(data){
 // var node3 = sys.addNode('url-3',{'color':'blue','shape':'rectangle','label':'google.com'});
 // sys.addEdge(node1, node2);
 // sys.addEdge(node1, node3);
-
-
-
-
 // particleSystem.screenSize(w,h);
