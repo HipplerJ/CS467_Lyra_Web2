@@ -13,6 +13,9 @@
 ** Due: Friday, August 17, 2018
 **
 ** Filename: search_state.py
+**
+** Example Form Return:
+** {'starting_url': 'https://www.google.com', 'method': 'value', 'depth': 12, 'keyword': 'find me'}
 ********************************************************************************
 """
 
@@ -37,13 +40,13 @@ class search_state():
     ****************************************************************************
     """
 
-    def initialize_state(self, arguments):
-        self.num_args(arguments)                                                # Call the function to reference and store the number of arguments
-        self.start_page(arguments[1])                                           # Call the function to reference and store the starting URL
-        self.search_type(arguments[2])                                          # Call the function to reference and store the search type
-        self.depth_limit(arguments[3])                                          # Call the function to reference and store the limit for the search depth
-        if self.num_arguments == 5:                                             # If the number of the arguments is five then then the optional keyword was input
-            self.set_keyword(arguments[4])                                      # Call the function to  reference and store the keyword elements
+    def initialize_state(self, form_data):
+        self.num_args(len(form_data))                                           # Call the function to reference and store the number of arguments
+        self.start_page(form_data['starting_url'])                              # Call the function to reference and store the starting URL
+        self.search_type(form_data['method'])                                   # Call the function to reference and store the search type
+        self.depth_limit(form_data['depth'])                                    # Call the function to reference and store the limit for the search depth
+        if form_data['keyword']:                                                # If the number of the arguments is five then then the optional keyword was input
+            self.set_keyword(form_data['keyword'])                              # Call the function to  reference and store the keyword elements
 
     """
     ****************************************************************************
@@ -52,7 +55,7 @@ class search_state():
     """
 
     def num_args(self, arguments):
-        self.num_arguments = len(arguments)
+        self.num_arguments = arguments
 
     """
     ****************************************************************************
@@ -75,7 +78,7 @@ class search_state():
             self.depth_search = False                                           # Set the Depth First Search to False
         if type == "depth":                                                     # If Search option Depth-First was selected
             self.depth_search = True                                            # Set the Depth First Search to False
-            self.breadth_search = False                                         # Set the Breadth First Seatch to True
+            self.breadth_search = False                                         # Set the Breadth First Search to True
 
     """
     ****************************************************************************
@@ -84,7 +87,7 @@ class search_state():
     """
 
     def depth_limit(self, dep_lim):
-        self.depth = int(dep_lim)
+        self.depth = int(dep_lim)                                               # Set the search to the limit from the form (as an integer)
 
     """
     ****************************************************************************

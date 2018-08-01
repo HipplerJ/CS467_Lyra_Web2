@@ -65,8 +65,8 @@ def package_content (start_url, url_list):
 """
 
 def write_json(data, depth):
-    dir_name = "../crawler_results"                                             # Store results in a directory called crawler_results in the parent project folder
-    file_name = "{}/results_page_{}.json".format(dir_name, depth)               # Set the filename to ../crawler_results/results_page_[x].json
+    dir_name = "static/json/crawler_results"                                    # Store results in a directory called crawler_results in the parent project folder
+    file_name = "{}/results.json".format(dir_name)                              # Set the filename to ../crawler_results/results_page_[x].json
     if not os.path.exists(dir_name):                                            # Check for a directory called crawler_results in the project folder
         os.makedirs(dir_name)                                                   # If it does not exist, then create the directory
     with open(file_name, 'w') as file_out:                                      # Open a json file and dump the current graph with the appropriate json formatting
