@@ -12,10 +12,7 @@
 ** web searches.
 ** Due: Friday, August 17, 2018
 **
-** Filename: search_state.py
-**
-** Example Form Return:
-** {'starting_url': 'https://www.google.com', 'method': 'value', 'depth': 12, 'keyword': 'find me'}
+** Filename: graph.py
 ********************************************************************************
 """
 
