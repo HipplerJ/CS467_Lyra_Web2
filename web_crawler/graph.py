@@ -22,12 +22,20 @@ class build_graph():
     edges = {}
 
     def add_nodes(self, node, url):
-        self.nodes[node] = { 'url': url }
+        print()
+        if not node in self.nodes.values():
+            self.nodes[node] = { 'url': url }
+        else:
+            self.nodes[node].update(node)
         # if keyword:
         #     self.nodes[title].update({ 'keyword': 'I am a keyword' })
 
     def add_edges(self, node, edge):
-        self.edges[node] = { edge: {}}
+        if not node in self.edges.values():
+            self.edges[node] = { edge: {} }
+        else:
+            new_connection = { edge: {} }
+            self.edges[node].update(new_connection)
 
 
     def package_graph(self):

@@ -39,8 +39,6 @@ from bs4 import BeautifulSoup                                                   
 """
 
 def start_search(state):
-    url_list = []
-    url_list.append(state.starting_url)
     if state.breadth_search:
         breadth_first_search(state, state.starting_url)                         # Initiate Breadth First Search
     if state.depth_search:
@@ -75,18 +73,27 @@ def depth_first_search(state, url):
         soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
         node = get_title(soup)                                                  # Collect the page Title
         edge_list = search_urls(soup, url)                                      # Collect All http and https URLs on the page
+
+        print(edge_list)
+
         graph.add_nodes(node, url)
         build_connections(graph, node, edge_list)
+        url = select_random_url(edge_list)
     print(graph.nodes)
     print(graph.edges)
 
+"""
+********************************************************************************
+* Description: build_connections function
+********************************************************************************
+"""
+
 def build_connections(graph, node, edge_list):
     for x in range(len(edge_list)):
-        print(edge_list[x])
-        if check_url_format(edge_list[x]):
-            soup = get_page(edge_list[x])
-            edge = get_title(soup)
-            graph.add_edges(node, edge)
+        soup = get_page(edge_list[x])
+        edge = get_title(soup)
+        print(edge)
+        graph.add_edges(node, edge)
 
 """
 ********************************************************************************
@@ -119,13 +126,10 @@ def get_title(soup):
 def search_urls(soup, urls):                                                    # Set the first URL to the input provided in the command line
     links = []                                                                  # Establish an empty list that will eventually hold the list of urls
     for anchor in soup.find_all('a', href=True):                                # Loop through each anchor tag found in the parsed BeautifulSoup Object
-        if check_url_format(anchor.get('href')):                                            # If the found URL does not begin with http or https, Ignore it (TRY TO FIX THIS LATER)
+        if anchor.get('href').startswith("http"):                               # If the found URL does not begin with http or https, Ignore it (TRY TO FIX THIS LATER)
             links.append(anchor.get('href'))                                    # Append the URL link to the list
     return links                                                                # Return the URL links list to the calling function
 
-def check_url_format(url):
-    if url.startswith('http'):
-        return True
 """
 ********************************************************************************
 * Description: search_keyword function
