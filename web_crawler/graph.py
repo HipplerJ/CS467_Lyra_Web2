@@ -17,12 +17,21 @@
 """
 
 class build_graph():
+    visited = []
     nodes = {}
     edges = {}
 
-    def add_node(self, node):
-        self.nodes.update(node)
+    def add_nodes(self, node, url):
+        self.nodes[node] = { 'url': url }
+        # if keyword:
+        #     self.nodes[title].update({ 'keyword': 'I am a keyword' })
 
-    def add_edges(self, edges):
-        for x in range(len(edges)):
-            self.edges.update(edges[x])
+    def add_edges(self, node, edge):
+        self.edges[node] = { edge: {}}
+
+
+    def package_graph(self):
+        graph = {}
+        graph.update(self.nodes)
+        graph.update(self.edges)
+        return graph

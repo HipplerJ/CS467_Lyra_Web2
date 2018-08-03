@@ -25,7 +25,6 @@
 
 import json                                                                     # Import the library necessary for exporting data to a json file
 import os                                                                       # Import the os library necessary for checking and creating directories
-from collections import defaultdict                                             # Import the library necessary for generating a default dictionary (defaultdict)
 
 """
 ********************************************************************************
@@ -35,25 +34,25 @@ from collections import defaultdict                                             
 ********************************************************************************
 """
 
-def send_data_server(start_url, url_list, depth):
-    data = package_content(start_url, url_list)                                 # Create the dictionary (graph) relationship between the node and it's URLS
-    print(data)
-    write_json(data, depth)                                                     # Write the information to a .json file
+# def send_data_server(start_url, url_list, depth):
+#     data = package_content(start_url, url_list)                                 # Create the dictionary (graph) relationship between the node and it's URLS
+#     print(data)
+#     write_json(data, depth)                                                     # Write the information to a .json file
 
-"""
-********************************************************************************
-* Description: package_content function
-* Function takes the starting url and all the associated URL links located on
-* the page and creates a dictionary with this information.  The graph is
-* returned to the calling function once complete
-********************************************************************************
-"""
-
-def package_content (start_url, url_list):
-    graph = defaultdict(list)                                                   # Create a defaultdict(list) to store the URL and it's connections
-    for url in url_list:                                                        # For each URL in the connections list
-        graph[start_url].append(url)                                            # Add that connection to the graph
-    return graph                                                                # Return the graph to the calling function
+# """
+# ********************************************************************************
+# * Description: package_content function
+# * Function takes the starting url and all the associated URL links located on
+# * the page and creates a dictionary with this information.  The graph is
+# * returned to the calling function once complete
+# ********************************************************************************
+# """
+#
+# def package_content (start_url, url_list):
+#     graph = defaultdict(list)                                                   # Create a defaultdict(list) to store the URL and it's connections
+#     for url in url_list:                                                        # For each URL in the connections list
+#         graph[start_url].append(url)                                            # Add that connection to the graph
+#     return graph                                                                # Return the graph to the calling function
 
 """
 ********************************************************************************
@@ -64,7 +63,7 @@ def package_content (start_url, url_list):
 ********************************************************************************
 """
 
-def write_json(data, depth):
+def write_json(data):
     dir_name = "static/json/crawler_results"                                    # Store results in a directory called crawler_results in the parent project folder
     file_name = "{}/results.json".format(dir_name)                              # Set the filename to ../crawler_results/results_page_[x].json
     if not os.path.exists(dir_name):                                            # Check for a directory called crawler_results in the project folder
