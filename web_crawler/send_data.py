@@ -28,42 +28,14 @@ import os                                                                       
 
 """
 ********************************************************************************
-* Description: send_data_server function
-* Function that packages and writes the URL graphs.  Write each node as they
-* become available in order to stream data.
-********************************************************************************
-"""
-
-# def send_data_server(start_url, url_list, depth):
-#     data = package_content(start_url, url_list)                                 # Create the dictionary (graph) relationship between the node and it's URLS
-#     print(data)
-#     write_json(data, depth)                                                     # Write the information to a .json file
-
-# """
-# ********************************************************************************
-# * Description: package_content function
-# * Function takes the starting url and all the associated URL links located on
-# * the page and creates a dictionary with this information.  The graph is
-# * returned to the calling function once complete
-# ********************************************************************************
-# """
-#
-# def package_content (start_url, url_list):
-#     graph = defaultdict(list)                                                   # Create a defaultdict(list) to store the URL and it's connections
-#     for url in url_list:                                                        # For each URL in the connections list
-#         graph[start_url].append(url)                                            # Add that connection to the graph
-#     return graph                                                                # Return the graph to the calling function
-
-"""
-********************************************************************************
-* Description: write_json function
+* Description: write_json_file function
 * Function stores each nodes and it's connections as an individual .json file
 * under a directory called crawler_results located in the project.  If the
 * directory does not previously exist, then it is created.
 ********************************************************************************
 """
 
-def write_json(data):
+def write_json_file(data):
     dir_name = "static/json/crawler_results"                                    # Store results in a directory called crawler_results in the parent project folder
     file_name = "{}/results.json".format(dir_name)                              # Set the filename to ../crawler_results/results_page_[x].json
     if not os.path.exists(dir_name):                                            # Check for a directory called crawler_results in the project folder

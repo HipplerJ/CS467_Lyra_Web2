@@ -42,8 +42,8 @@ class search_state():
 
     def initialize_state(self, form_data):
         self.num_args(len(form_data))                                           # Call the function to reference and store the number of arguments
-        self.start_page(form_data['starting_url'])                              # Call the function to reference and store the starting URL
         self.search_type(form_data['method'])                                   # Call the function to reference and store the search type
+        self.start_page(form_data['starting_url'])                              # Call the function to reference and store the starting URL
         self.depth_limit(form_data['depth'])                                    # Call the function to reference and store the limit for the search depth
         if form_data['keyword']:                                                # If the number of the arguments is five then then the optional keyword was input
             self.set_keyword(form_data['keyword'])                              # Call the function to  reference and store the keyword elements
@@ -87,7 +87,14 @@ class search_state():
     """
 
     def depth_limit(self, dep_lim):
-        self.depth = int(dep_lim)                                               # Set the search to the limit from the form (as an integer)
+        if int(dep_lim) < 1:
+            self.depth = 1
+        elif self.breadth_search and int(dep_lim) > 3:
+            self.depth = 3
+        elif self.depth_search and int(dep_lim) > 100:
+            self.depth = 100
+        else:
+            self.depth = int(dep_lim)                                           # Set the search to the limit from the form (as an integer)
 
     """
     ****************************************************************************

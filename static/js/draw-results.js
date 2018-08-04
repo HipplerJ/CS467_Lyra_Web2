@@ -18,7 +18,7 @@ $(window).resize(function(){
 })
 
 // test: open dummy json file with .getJSON and display contents using $.getJSON
-$.getJSON('/static/json/test-data.json', function(data){
+$.getJSON('/static/json/crawler_results/results.json', function(data){
 
   var nodes = data.nodes
 

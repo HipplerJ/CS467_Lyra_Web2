@@ -43,7 +43,6 @@ def start_search(state):
         breadth_first_search(state, state.starting_url)                         # Initiate Breadth First Search
     if state.depth_search:
         depth_first_search(state, state.starting_url)                           # Initiate Depth First Search
-
 """
 ********************************************************************************
 * Description: breadth_first_search function
@@ -69,18 +68,19 @@ def breadth_first_search(state, url, url_list):
 
 def depth_first_search(state, url):
     graph = g.build_graph()
+    print(state.depth)
     for x in range(state.depth):
+        print("LOOPING THROUGH LINKS")
+        graph.visited.append(url)
         soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
-        node = get_title(soup)                                                  # Collect the page Title
+        node = get_title(url, soup)                                                  # Collect the page Title
         edge_list = search_urls(soup, url)                                      # Collect All http and https URLs on the page
-
         print(edge_list)
-
         graph.add_nodes(node, url)
         build_connections(graph, node, edge_list)
-        url = select_random_url(edge_list)
-    print(graph.nodes)
-    print(graph.edges)
+        url = select_random_url(edge_list, graph)
+    graph.package_graph()
+    send.write_json_file(graph.graph)
 
 """
 ********************************************************************************
@@ -90,9 +90,10 @@ def depth_first_search(state, url):
 
 def build_connections(graph, node, edge_list):
     for x in range(len(edge_list)):
+        print(edge_list[x])
         soup = get_page(edge_list[x])
-        edge = get_title(soup)
-        print(edge)
+        edge = get_title(edge_list[x], soup)
+        graph.add_nodes(edge, edge_list[x])
         graph.add_edges(node, edge)
 
 """
@@ -112,9 +113,11 @@ def get_page(url):
 ********************************************************************************
 """
 
-def get_title(soup):
-    return soup.title.string
-
+def get_title(url, soup):
+    try:
+        return soup.title.string.strip()                                            # Return page title with leading and trailing spaces removed
+    except:
+        return url
 """
 ********************************************************************************
 * Description: search_urls function
@@ -155,5 +158,9 @@ def search_keyword(soup, keyword):
 ********************************************************************************
 """
 
-def select_random_url(url_list):
-    return(choice(url_list))                                                    # Return a randomly selected URL from the list
+def select_random_url(url_list, graph):
+    random = choice(url_list)                                                   # Return a randomly selected URL from the list
+    if random in graph.visited:
+        select_random_url(url_list, graph)
+    else:
+        return random

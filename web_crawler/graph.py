@@ -20,26 +20,18 @@ class build_graph():
     visited = []
     nodes = {}
     edges = {}
+    graph = {}
 
     def add_nodes(self, node, url):
-        print()
-        if not node in self.nodes.values():
-            self.nodes[node] = { 'url': url }
-        else:
-            self.nodes[node].update(node)
-        # if keyword:
-        #     self.nodes[title].update({ 'keyword': 'I am a keyword' })
+        self.nodes[node] = { 'url': url }
 
     def add_edges(self, node, edge):
-        if not node in self.edges.values():
-            self.edges[node] = { edge: {} }
+        connection = { edge: {} }
+        if node not in self.edges:
+            self.edges[node] = connection
         else:
-            new_connection = { edge: {} }
-            self.edges[node].update(new_connection)
-
+            self.edges[node].update(connection)
 
     def package_graph(self):
-        graph = {}
-        graph.update(self.nodes)
-        graph.update(self.edges)
-        return graph
+        self.graph['nodes'] = self.nodes
+        self.graph['edges'] = self.edges
