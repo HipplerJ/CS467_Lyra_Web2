@@ -70,7 +70,6 @@ def depth_first_search(state, url):
     graph = g.build_graph()
     print(state.depth)
     for x in range(state.depth):
-        print("LOOPING THROUGH LINKS")
         graph.visited.append(url)
         soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
         node = get_title(url, soup)                                                  # Collect the page Title
