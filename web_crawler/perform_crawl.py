@@ -68,11 +68,10 @@ def breadth_first_search(state, url, url_list):
 
 def depth_first_search(state, url):
     graph = g.build_graph()
-    print(state.depth)
     for x in range(state.depth):
         graph.visited.append(url)
         soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
-        node = get_title(url, soup)                                                  # Collect the page Title
+        node = get_title(url, soup)                                             # Collect the page Title
         edge_list = search_urls(soup, url)                                      # Collect All http and https URLs on the page
         print(edge_list)
         graph.add_nodes(node, url)
