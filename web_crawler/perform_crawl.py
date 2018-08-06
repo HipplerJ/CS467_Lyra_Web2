@@ -43,6 +43,7 @@ def start_search(state):
         breadth_first_search(state, state.starting_url)                         # Initiate Breadth First Search
     if state.depth_search:
         depth_first_search(state, state.starting_url)                           # Initiate Depth First Search
+
 """
 ********************************************************************************
 * Description: breadth_first_search function
@@ -67,18 +68,49 @@ def breadth_first_search(state, url, url_list):
 """
 
 def depth_first_search(state, url):
-    graph = g.build_graph()
-    for x in range(state.depth):
-        graph.visited.append(url)
+    graph = g.build_graph()                                                     # Create an instance of the graph class
+    for x in range(state.depth):                                                # Loop through the search process for the search depth specified by the user
         soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
-        node = get_title(url, soup)                                             # Collect the page Title
-        edge_list = search_urls(soup, url)                                      # Collect All http and https URLs on the page
-        print(edge_list)
-        graph.add_nodes(node, url)
-        build_connections(graph, node, edge_list)
-        url = select_random_url(edge_list, graph)
+        if soup:
+            node = get_title(url, soup)                                         # Collect the page Title
+            edge_list = search_urls(soup, url)                                  # Collect All http and https URLs on the page
+            build_node_info(graph, node, url)                                          # Add the node to the visited url list so that we don't repeat
+            build_nodes_connections(graph, node, url)
+            url = select_random_url(edge_list, graph)
+            if not url:
+                break
+        # else:
+        #     graph.add_nodes("Page Not Found", url)
+        #     if x == 0:
+        #         break                                                         # Break the cycle because page cannot be loaded
+    build_edge_connections(graph)
     graph.package_graph()
     send.write_json_file(graph.graph)
+    print(graph.visited)
+    print(graph.nodes)
+    print(graph.edges)
+    del graph                                                                   # Ensures that the graph class objects are deleted once complete (Get weird errors if not)
+
+"""
+********************************************************************************
+* Description: build_nodes function
+********************************************************************************
+"""
+
+def build_node_info(graph, node, link):
+    node_info = []
+    node_info.append(node)
+    node_info.append(link)
+    graph.visited.append(node_info)
+
+"""
+********************************************************************************
+* Description: build_nodes function
+********************************************************************************
+"""
+
+def build_nodes_connections(graph, node, link):
+    graph.add_nodes(node, link)
 
 """
 ********************************************************************************
@@ -86,13 +118,25 @@ def depth_first_search(state, url):
 ********************************************************************************
 """
 
-def build_connections(graph, node, edge_list):
-    for x in range(len(edge_list)):
-        print(edge_list[x])
-        soup = get_page(edge_list[x])
-        edge = get_title(edge_list[x], soup)
-        graph.add_nodes(edge, edge_list[x])
-        graph.add_edges(node, edge)
+def build_edge_connections(graph):
+    for x in range(len(graph.visited) - 1):
+        graph.add_edges(graph.visited[x][0], graph.visited[x + 1][0])
+
+# def depth_first_search(state, url):
+#     graph = g.build_graph()
+#     for x in range(state.depth):
+#         graph.visited.append(url)
+#         soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
+#         node = get_title(url, soup)                                             # Collect the page Title
+#         edge_list = search_urls(soup, url)                                      # Collect All http and https URLs on the page
+#         print(edge_list)
+#         graph.add_nodes(node, url)
+#         build_connections(graph, node, edge_list)
+#         url = select_random_url(edge_list, graph)
+#     graph.package_graph()
+#     send.write_json_file(graph.graph)
+
+
 
 """
 ********************************************************************************
@@ -101,9 +145,12 @@ def build_connections(graph, node, edge_list):
 """
 
 def get_page(url):
-    html_res = requests.get(url)                                                # Get the content from the current webpage and assign to variable
-    soup = BeautifulSoup(html_res.text, 'html.parser')                          # Parse the HTML text return from the res.text object (Return beautiful soup object)
-    return soup
+    try:
+        html_res = requests.get(url)                                            # Get the content from the current webpage and assign to variable
+        soup = BeautifulSoup(html_res.text, 'html.parser')                      # Parse the HTML text return from the res.text object (Return beautiful soup object)
+        return soup
+    except:
+        return False
 
 """
 ********************************************************************************
@@ -113,9 +160,9 @@ def get_page(url):
 
 def get_title(url, soup):
     try:
-        return soup.title.string.strip()                                            # Return page title with leading and trailing spaces removed
+        return soup.title.string.strip()                                        # Return page title with leading and trailing spaces removed
     except:
-        return url
+        return "No Title Found"
 """
 ********************************************************************************
 * Description: search_urls function
@@ -157,8 +204,10 @@ def search_keyword(soup, keyword):
 """
 
 def select_random_url(url_list, graph):
-    random = choice(url_list)                                                   # Return a randomly selected URL from the list
+    try:
+        random = choice(url_list)                                               # Return a randomly selected URL from the list
+    except:
+        return False
     if random in graph.visited:
         select_random_url(url_list, graph)
-    else:
-        return random
+    return random
