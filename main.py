@@ -26,7 +26,7 @@
 import sys
 sys.path.append('web_crawler/')                                                 # Add the python crawler directory to the system path
 import threading
-from flask import Flask, render_template, url_for, redirect, request
+from flask import Flask, render_template, url_for, redirect, request, make_response
 from wtforms import Form, StringField, IntegerField, RadioField, validators
 import crawler as crawl
 
@@ -49,11 +49,31 @@ def index():
 def search():
     form = SearchForm(request.form)
     if request.method == 'POST' and form.validate():
+
         # crawler_thread = threading.Thread(target=crawl.crawler, args=form.data)
         # crawler_thread.start()
         # app.logger.info(form.data)
         crawl.crawler(form.data)                                                # Call function to perform crawl using the Form submissions on the the search routes
-        return redirect(url_for('results',data=request.form.get("data")),code=307)
+
+        # TODO save searched web page and associated keyword to cookie
+        # response = make_response(redirect(url_for('results',data=request.form.get("data")),code=307))
+
+        # TODO get previous cookie starting_page_list of starting page:keyword object.
+        # TODO if the starting webpage/keyword combo is not in the list returned by the cookie
+            # TODO add the starting webpage/keyword combo to the cookie list
+                # TODO if no keyword entered, add ""
+        # TODO set the cookie with the new list (with new start_page_url/keyword appended to it)
+
+
+
+        # TODO make redirect work again
+        # return redirect(url_for('results',data=request.form.get("data")),code=307)
+        return redirect(url_for('results'))
+        # return response
+
+
+    # TODO if its a get request, check for cookie.
+    # If cookie exists, print the list of previous starting pages/keywords when rendering template
     return render_template('search.html', form=form)
 
 # Routing for Search Results
