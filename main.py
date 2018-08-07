@@ -45,11 +45,12 @@ def index():
     return render_template('home.html')
 
 # Routing for the Search Form Page
-@app.route('/search', methods=['GET', 'POST'])
+@app.route('/search', methods=['POST'])
 def search():
 
     # instantiate WTForm object
     form = SearchForm(request.form)
+    print(form)
 
     # check for previously set cookies
     url_cookie = request.cookies.get('urls')
@@ -63,7 +64,7 @@ def search():
         # crawler_thread = threading.Thread(target=crawl.crawler, args=form.data)
         # crawler_thread.start()
         # app.logger.info(form.data)
-        # crawl.crawler(form.data)      # Call function to perform crawl using the Form submissions on the the search routes
+        crawl.crawler(form.data)      # Call function to perform crawl using the Form submissions on the the search routes
 
         # use make_response so we can set cookies
         # create response object with redirect to 'results' as action

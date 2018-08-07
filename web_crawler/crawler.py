@@ -26,6 +26,7 @@ import search_state as ss                                                       
 import perform_crawl as crawl                                                   # Imports the code from the perform_crawl.py file (uses crawl alias)
 
 def crawler(form_details):
+    print(form_details)
     state = ss.search_state()                                                   # Instantiate the search_state Class Object
     state.initialize_state(form_details)                                        # Call search_state object function to initialize search parameters
     crawl.start_search(state)                                                   # Call the function to start the search

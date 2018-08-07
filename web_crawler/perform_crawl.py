@@ -39,7 +39,6 @@ from bs4 import BeautifulSoup                                                   
 """
 
 def start_search(state):
-    print(state.depth)
     if state.breadth_search:
         breadth_first_search(state, state.starting_url)                         # Initiate Breadth First Search
     if state.depth_search:
