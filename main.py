@@ -71,11 +71,14 @@ def search():
 
         # if a cookie is already set, append the new url to the cookie string
         if url_cookie:
-            # append url to cookie string with ", " delimiter
-            url_cookie += ", " + form.starting_url.data
-            response.set_cookie('urls', url_cookie) # set the new cookie
+            # TODO if url isn't already saved
+            if form.starting_url.data not in url_cookie:
 
-        # TODO else, if no 'urls' cookie yet, set urls cookie to new url
+                # append url to cookie string with ", " delimiter
+                url_cookie += ", " + form.starting_url.data
+                response.set_cookie('urls', url_cookie) # set the new cookie
+
+        # else, if no 'urls' cookie yet, set urls cookie to new url
         else:
             response.set_cookie('urls', form.starting_url.data)
 
@@ -86,19 +89,20 @@ def search():
     else:
 
         url_list = None
-        # TODO if a cookie is set, send it as a list to the search template
+
+        # if a cookie is set, send it as a list to the search template
         # to be rendered within dropdown input
         if url_cookie:
             url_list = url_cookie.split(delimiter)     # split into list
             # render_template('search.html', form=form, url_list=url_list) # render search.html with url_list
 
-        # if no cookie, render the search form template
+        # render the search form template
         return render_template('search.html', form=form, url_list=url_list)
 
 # Routing for Search Results
-@app.route('/results/<data>', methods=['GET', 'POST'])
-def results(data):
-    return render_template('results.html', data=data)
+@app.route('/results', methods=['GET', 'POST'])
+def results():
+    return render_template('results.html')
 
 if __name__ == '__main__':
     app.debug = True      # FIXME remove when done debugging

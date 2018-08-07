@@ -9,36 +9,48 @@
 
     <h1>Search Parameters</h1>
 
+    {% if url_list %}
+      <p>Welcome back! Previously crawled URL's can be found in the dropdown below:</p>
+    {% endif %}
+
     <hr class="my-4">
     <p class="lead">
 
-    {% if url_list %}
-      <h1>url_list cookie found</h1>
-
-      <ul>
-        {% for url in url_list %}
-          <li>{{ url }}</li>
-
-        {% endfor %}
-      </ul>
-
-
-    {% else %}
-      <h1>No url_list cookie found</h1>
-
-    {% endif %}
-
-
     {% from "includes/_form_helpers.html" import render_field %}
     <form action="/search" class="search" method="POST">
+
+      <!-- starting_url input -->
       <div class="form-group">
+
+        <!-- if cookie, render a dropdown/text entry -->
+        {% if url_list %}
+        <label for="starting_url">Starting URL</label>
+        <input class="form-control" id="starting_url" name="starting_url" type="text" list="url_list" required>
+        <datalist id="url_list">
+          {% for url in url_list %}
+            <option value="{{ url }}"></option>
+          {% endfor %}
+        </datalist>
+
+        <!-- else, if no cookie, render a normal text input form -->
+        {% else %}
         {{ render_field(form.starting_url, class_="form-control") }}
+        {% endif %}
+
       </div>
-      {{ render_field(form.method) }}
-      {{ render_field(form.depth) }}
+
+      <!-- Radio input for method -->
+      <div class="form-group">
+        {{ render_field(form.method) }}
+        {{ render_field(form.depth) }}
+      </div>
+
+      <!-- Text input for optional keyword -->
       <div class="form-group">
         {{ render_field(form.keyword, class_="form-control") }}
       </div>
+
+      <!-- Submit button -->
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
