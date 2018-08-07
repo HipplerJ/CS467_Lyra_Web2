@@ -8,34 +8,34 @@
   <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/graphics.js') }}"></script>
   <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/renderer.js') }}"></script>
 
-  <div class="jumbotron text-center">
-    <h1>Search Results</h1>
-  </div>
+  <!-- <div class="jumbotron text-center"> -->
+    <!-- <h1>Search Results</h1> -->
+  <!-- </div> -->
 
     <!-- display posted data -->
-    <h2>Posted Data:</h2>
+    <!-- <h2>Posted Data:</h2> -->
 
     <!-- <p>data: {{data}}</p> -->
-    <ul>
+    <!-- <ul>
       {% for item in form %}
       <li>{{item.name}} : {{item.data}}</li>
       {% endfor %}
-    </ul>
+    </ul> -->
 
 
 
     <!-- Demonstrate arbor.js -->
-    <h4>Data Visualization Example</h4>
+    <!-- <h4>Data Visualization Example</h4> -->
 
     <!-- arbor demo from https://gist.github.com/RC1140/1036344/372f96bc3efd344f274a1440e2a4f3ff07d9f87d -->
     <!-- http://blog.thinkst.com/2011/06/simple-graphs-with-arborjs.html -->
-    <!-- <canvas id="viewport" width="800" height="600" style="border:1px solid black"></canvas> -->
-    <canvas id="viewport" width="800" height="600"></canvas>
+    <canvas id="viewport" width="800" height="600" style="border:1px solid #ccc; border-radius:16px"></canvas>
+    <!-- <canvas id="viewport" width="800" height="600"></canvas> -->
 
 
-    <h4>Dummy JSON data (from file)</h4>
+    <!-- <h4>Dummy JSON data (from file)</h4> -->
     <!-- append/print test json file data as child of this div -->
-    <div id="testdata"></div>
+    <!-- <div id="testdata"></div> -->
 
     <!-- script that opens json file and draws graph of json objects -->
     <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/draw-results.js') }}"></script>
