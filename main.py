@@ -26,7 +26,7 @@
 import sys
 sys.path.append('web_crawler/')                                                 # Add the python crawler directory to the system path
 import threading
-from flask import Flask, render_template, url_for, redirect, request
+from flask import Flask, render_template, url_for, redirect, request, make_response
 from wtforms import Form, StringField, IntegerField, RadioField, validators
 import crawler as crawl
 
@@ -48,12 +48,19 @@ def index():
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     form = SearchForm(request.form)
-    if request.method == 'POST' and form.validate():
+    # if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
         # crawler_thread = threading.Thread(target=crawl.crawler, args=form.data)
         # crawler_thread.start()
         # app.logger.info(form.data)
-        crawl.crawler(form.data)                                                # Call function to perform crawl using the Form submissions on the the search routes
-        return redirect(url_for('results',data=request.form.get("data")),code=307)
+        # crawl.crawler(form.data)      # Call function to perform crawl using the Form submissions on the the search routes
+
+        response = make_response(redirect(url_for('results', code=307)))
+        response.set_cookie('urls', form.starting_url.data)
+
+
+
+        return response
     return render_template('search.html', form=form)
 
 # Routing for Search Results
