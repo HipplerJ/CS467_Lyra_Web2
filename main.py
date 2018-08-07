@@ -34,10 +34,11 @@ import crawler as crawl
 app = Flask(__name__)
 
 class SearchForm(Form):
-    starting_url    = StringField('Starting URL', [validators.Length(min=1), validators.URL(message='Please Enter a Valid URL (example https://oregonstate.edu)'), validators.InputRequired()])
-    method          = RadioField('Search Method', choices=[('breadth','Breadth First'),('depth','Depth First')], validators = [validators.InputRequired(message='A Search Method must be Selected')])
-    depth           = IntegerField('Search Depth', [validators.InputRequired(message='Search Depth Maximum is 3 for Breadth and 100 for Depth')])
-    keyword         = StringField('Keyword (Optional)')
+    starting_url    = StringField('Starting URL:', [validators.Length(min=1), validators.URL(message='Please Enter a Valid URL (example https://oregonstate.edu)'), validators.InputRequired()])
+    method          = RadioField('Search Method:', choices=[('breadth','Breadth First'),('depth','Depth First')], validators = [validators.InputRequired(message='A Search Method must be Selected')])
+    # method          = RadioField('Search Method', choices=[('breadth','Breadth First'),('depth','Depth First')], [validators.InputRequired(message='A Search Method must be Selected')])
+    depth           = IntegerField('Search Depth:', [validators.InputRequired(message='Search Depth Maximum is 3 for Breadth and 100 for Depth')])
+    keyword         = StringField('Keyword (Optional):')
 
 # Routing for the Home (main) page
 @app.route('/')
