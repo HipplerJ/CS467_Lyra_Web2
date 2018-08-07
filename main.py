@@ -32,7 +32,7 @@ import crawler as crawl
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'oRXh3JLtrO'
+
 class SearchForm(Form):
     starting_url    = StringField('Starting URL', [validators.Length(min=1), validators.URL(message='Please Enter a Valid URL (example https://oregonstate.edu)'), validators.InputRequired()])
     method          = RadioField('Search Method', choices=[('breadth','Breadth First'),('depth','Depth First')], validators = [validators.InputRequired(message='A Search Method must be Selected')])
