@@ -32,7 +32,7 @@ import crawler as crawl
 
 
 app = Flask(__name__)
-
+app.config['SECRET_KEY'] = 'oRXh3JLtrO'
 class SearchForm(Form):
     starting_url    = StringField('Starting URL', [validators.Length(min=1), validators.URL(message='Please Enter a Valid URL (example https://oregonstate.edu)'), validators.InputRequired()])
     method          = RadioField('Search Method', choices=[('breadth','Breadth First'),('depth','Depth First')], validators = [validators.InputRequired(message='A Search Method must be Selected')])
@@ -45,7 +45,7 @@ def index():
     return render_template('home.html')
 
 # Routing for the Search Form Page
-@app.route('/search', methods=['POST'])
+@app.route('/search', methods=['GET','POST'])
 def search():
 
     # instantiate WTForm object
@@ -58,7 +58,7 @@ def search():
 
     # If the user has posted valid data from the form
     # if request.method == 'POST' and form.validate():
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate():
 
         # Call crawler
         # crawler_thread = threading.Thread(target=crawl.crawler, args=form.data)

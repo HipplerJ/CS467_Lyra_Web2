@@ -23,9 +23,9 @@ $.getJSON('/static/json/crawler_results/results.json?' + new Date().getTime(), f
   var nodes = data.nodes
 
   // add label to each node - same as name (key)
-  $.each(nodes, function(key, value){
-    value.label=key
-  })
+  // $.each(nodes, function(key, value){
+  //   value.label=key
+  // })
 
   // FIXME trace: display json file data in page
   // reference: https://api.jquery.com/jquery.getjson/
