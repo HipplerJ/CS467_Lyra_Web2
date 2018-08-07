@@ -47,16 +47,17 @@ def index():
 # Routing for the Search Form Page
 @app.route('/search', methods=['GET', 'POST'])
 def search():
+
     form = SearchForm(request.form)
-    if request.method == 'POST' and form.validate():
+
+    # print("form.validate: " + str(form.validate()))
+    # if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
 
         # crawler_thread = threading.Thread(target=crawl.crawler, args=form.data)
         # crawler_thread.start()
         # app.logger.info(form.data)
-        crawl.crawler(form.data)                                                # Call function to perform crawl using the Form submissions on the the search routes
-
-        # TODO save searched web page and associated keyword to cookie
-        # response = make_response(redirect(url_for('results',data=request.form.get("data")),code=307))
+        # crawl.crawler(form.data)                                                # Call function to perform crawl using the Form submissions on the the search routes
 
         # TODO get previous cookie starting_page_list of starting page:keyword object.
         # TODO if the starting webpage/keyword combo is not in the list returned by the cookie
@@ -66,10 +67,24 @@ def search():
 
 
 
-        # TODO make redirect work again
+        # TODO save searched web page and associated keyword to cookie
+        # response = make_response(redirect(url_for('results',data=request.form.get("data")),code=307))
+        # response = make_response(redirect(url_for('results',data='hi does this work'),code=307))
+        # stuff = "works?"
+        # response = make_response(redirect(url_for('results',form_data=stuff)))
+
+
+        # FIXME trace statements
+        # for item in form:
+        #     print("%s: %s" %(item.name, item.data))
+        # print(str(form))
+
+        # TODO make redirect work ... for the FIRST time
         # return redirect(url_for('results',data=request.form.get("data")),code=307)
-        return redirect(url_for('results'))
+        # return redirect(url_for('results', data=form))
+        # return redirect(url_for('index'))
         # return response
+        return render_template('results.html', form=form)
 
 
     # TODO if its a get request, check for cookie.
@@ -77,9 +92,10 @@ def search():
     return render_template('search.html', form=form)
 
 # Routing for Search Results
-@app.route('/results', methods=['GET', 'POST'])
-def results():
-    return render_template('results.html')
+@app.route('/results/<data>', methods=['GET', 'POST'])
+def results(data):
+    return render_template('results.html', data=data)
 
 if __name__ == '__main__':
+    app.debug = True      # FIXME remove when done debugging
     app.run(debug=True, port=7777, threaded=True)

@@ -9,7 +9,7 @@
     <hr class="my-4">
     <p class="lead">
     {% from "includes/_form_helpers.html" import render_field %}
-    <form class="search" method="POST">
+    <form action="/search" class="search" method="POST">
       <div class="form-group">
         {{ render_field(form.starting_url, class_="form-control") }}
       </div>

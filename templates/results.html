@@ -13,7 +13,16 @@
   </div>
 
     <!-- display posted data -->
-    <!-- <h2>Posted Data:</h2> -->
+    <h2>Posted Data:</h2>
+
+    <!-- <p>data: {{data}}</p> -->
+    <ul>
+      {% for item in form %}
+      <li>{{item.name}} : {{item.data}}</li>
+      {% endfor %}
+    </ul>
+
+
 
     <!-- Demonstrate arbor.js -->
     <h4>Data Visualization Example</h4>
@@ -30,5 +39,6 @@
 
     <!-- script that opens json file and draws graph of json objects -->
     <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/draw-results.js') }}"></script>
+
 
 {% endblock %}
