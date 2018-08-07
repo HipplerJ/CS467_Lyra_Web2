@@ -26,13 +26,21 @@
 """
 
 class search_state():
-    num_arguments = None
-    starting_url = None                                                         # Create variable for the starting URL (Initialize to None)
-    breadth_search = None                                                       # Create variable to determine if Breadth search is Used (Initialize to None)
-    depth_search = None                                                         # Create variable to determine if Depth search is Used (Initialize to None)
-    depth = None                                                                # Create variable for the search limit depth (Initialize to N)
-    keyword_used = None                                                         # Create variable to determine if the optional keyword was included (Initialize to None)
-    keyword = False                                                             # Create variable for the optional keyword string (Initializae to False)
+
+    """
+    ****************************************************************************
+    * Description: __init__ function
+    ****************************************************************************
+    """
+
+    def __init__(self):
+        self.num_arguments = None
+        self.starting_url = None                                                # Create variable for the starting URL (Initialize to None)
+        self.breadth_search = None                                              # Create variable to determine if Breadth search is Used (Initialize to None)
+        self.depth_search = None                                                # Create variable to determine if Depth search is Used (Initialize to None)
+        self.depth = None                                                       # Create variable for the search limit depth (Initialize to N)
+        self.keyword_used = None                                                # Create variable to determine if the optional keyword was included (Initialize to None)
+        self.keyword = False                                                    # Create variable for the optional keyword string (Initializae to False)
 
     """
     ****************************************************************************

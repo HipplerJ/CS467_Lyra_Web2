@@ -18,7 +18,7 @@ $(window).resize(function(){
 })
 
 // test: open dummy json file with .getJSON and display contents using $.getJSON
-$.getJSON('/static/json/crawler_results/results.json', function(data){
+$.getJSON('/static/json/crawler_results/results.json?' + new Date().getTime(), function(data){
 
   var nodes = data.nodes
 
@@ -29,7 +29,7 @@ $.getJSON('/static/json/crawler_results/results.json', function(data){
 
   // FIXME trace: display json file data in page
   // reference: https://api.jquery.com/jquery.getjson/
-  test_data.text(JSON.stringify(data));
+  // test_data.text(JSON.stringify(data));
 
   // draw the data
   sys.graft({nodes:data.nodes, edges:data.edges});

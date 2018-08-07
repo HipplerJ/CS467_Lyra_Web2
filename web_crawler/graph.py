@@ -17,10 +17,12 @@
 """
 
 class build_graph():
-    visited = []
-    nodes = {}
-    edges = {}
-    graph = {}
+
+    def __init__(self):
+        self.visited = []
+        self.nodes = {}
+        self.edges = {}
+        self.graph = {}
 
     def add_nodes(self, node, url):
         self.nodes[node] = { 'url': url }
