@@ -48,48 +48,52 @@ def index():
 @app.route('/search', methods=['GET', 'POST'])
 def search():
 
+    # instantiate WTForm object
     form = SearchForm(request.form)
 
-    # print("form.validate: " + str(form.validate()))
+    # check for previously set cookies
+    url_cookie = request.cookies.get('urls')
+    delimiter = ", "   # delimiter for urls when they're saved as a string
+
+    # If the user has posted valid data from the form
     # if request.method == 'POST' and form.validate():
     if request.method == 'POST':
 
+        # Call crawler
         # crawler_thread = threading.Thread(target=crawl.crawler, args=form.data)
         # crawler_thread.start()
         # app.logger.info(form.data)
-        # crawl.crawler(form.data)                                                # Call function to perform crawl using the Form submissions on the the search routes
+        # crawl.crawler(form.data)      # Call function to perform crawl using the Form submissions on the the search routes
 
-        # TODO get previous cookie starting_page_list of starting page:keyword object.
-        # TODO if the starting webpage/keyword combo is not in the list returned by the cookie
-            # TODO add the starting webpage/keyword combo to the cookie list
-                # TODO if no keyword entered, add ""
-        # TODO set the cookie with the new list (with new start_page_url/keyword appended to it)
+        # use make_response so we can set cookies
+        # create response object with redirect to 'results' as action
+        response = make_response(redirect(url_for('results', code=307)))
 
+        # if a cookie is already set, append the new url to the cookie string
+        if url_cookie:
+            # append url to cookie string with ", " delimiter
+            url_cookie += ", " + form.starting_url.data
+            response.set_cookie('urls', url_cookie) # set the new cookie
 
+        # TODO else, if no 'urls' cookie yet, set urls cookie to new url
+        else:
+            response.set_cookie('urls', form.starting_url.data)
 
-        # TODO save searched web page and associated keyword to cookie
-        # response = make_response(redirect(url_for('results',data=request.form.get("data")),code=307))
-        # response = make_response(redirect(url_for('results',data='hi does this work'),code=307))
-        # stuff = "works?"
-        # response = make_response(redirect(url_for('results',form_data=stuff)))
+        # set the cookie and redirect to results page
+        return response
 
+    # else if the user arrived via GET request from homepage
+    else:
 
-        # FIXME trace statements
-        # for item in form:
-        #     print("%s: %s" %(item.name, item.data))
-        # print(str(form))
+        url_list = None
+        # TODO if a cookie is set, send it as a list to the search template
+        # to be rendered within dropdown input
+        if url_cookie:
+            url_list = url_cookie.split(delimiter)     # split into list
+            # render_template('search.html', form=form, url_list=url_list) # render search.html with url_list
 
-        # TODO make redirect work ... for the FIRST time
-        # return redirect(url_for('results',data=request.form.get("data")),code=307)
-        # return redirect(url_for('results', data=form))
-        # return redirect(url_for('index'))
-        # return response
-        return render_template('results.html', form=form)
-
-
-    # TODO if its a get request, check for cookie.
-    # If cookie exists, print the list of previous starting pages/keywords when rendering template
-    return render_template('search.html', form=form)
+        # if no cookie, render the search form template
+        return render_template('search.html', form=form, url_list=url_list)
 
 # Routing for Search Results
 @app.route('/results/<data>', methods=['GET', 'POST'])

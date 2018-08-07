@@ -4,10 +4,31 @@
   <div class="jumbotron text-center">
     <h1>Crawler Search Page</h1>
   </div>
+
   <div class="jumbotron">
+
     <h1>Search Parameters</h1>
+
     <hr class="my-4">
     <p class="lead">
+
+    {% if url_list %}
+      <h1>url_list cookie found</h1>
+
+      <ul>
+        {% for url in url_list %}
+          <li>{{ url }}</li>
+
+        {% endfor %}
+      </ul>
+
+
+    {% else %}
+      <h1>No url_list cookie found</h1>
+
+    {% endif %}
+
+
     {% from "includes/_form_helpers.html" import render_field %}
     <form action="/search" class="search" method="POST">
       <div class="form-group">
@@ -20,5 +41,6 @@
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+
   </div>
 {% endblock %}
