@@ -23,10 +23,12 @@
 ********************************************************************************
 """
 
-import random                                                                   # Imports the python random library
+import send_data as send                                                        # Imports the code from the send_data.py file (uses send alias)
+import graph as g                                                               # Imports the code from the graph.py file (uses g alias)
+from random import choice                                                       # Imports the python random library
 import requests                                                                 # Import the requests python library to make HTML requests and download data
 from bs4 import BeautifulSoup                                                   # Import the BeautifulSoup library to navigate through HTML with Python
-import send_data as send                                                        # Imports the code from the send_data.py file (uses send alias)
+import re
 
 """
 ********************************************************************************
@@ -38,10 +40,11 @@ import send_data as send                                                        
 """
 
 def start_search(state):
-    if state.breadth_search:
-        breadth_first_search(state, state.starting_url)
-    if state.depth_search:
-        depth_first_search(state, state.starting_url)
+    graph = g.build_graph()                                                     # Create an instance of the graph class
+    if state.breadth_search:                                                    # If Breadth First Search was Specified
+        breadth_first_search(state, graph, state.starting_url)                  # Initiate Breadth First Search
+    if state.depth_search:                                                      # If Depth First Search was Specified
+        depth_first_search(state, graph, state.starting_url)                    # Initiate Depth First Search
 
 """
 ********************************************************************************
@@ -49,7 +52,8 @@ def start_search(state):
 ********************************************************************************
 """
 
-def breadth_first_search(state, url):
+def breadth_first_search(state, graph, url):
+    graph = g.build_graph()                                                     # Create an instance of the graph class
     for x in range(state.depth):
         soup, url_list = search_urls(url)
         for y in range(len(url_list)):
@@ -66,15 +70,96 @@ def breadth_first_search(state, url):
 ********************************************************************************
 """
 
-def depth_first_search(state, url):
-    for x in range(state.depth):                                                # Continue searching pages until the search limit is reached
-        soup, url_list = search_urls(url)                                       # Call function that will perform the web crawling functionality
-        # if state.keyword_used:                                                  # If the optional keyword is input by the user
-        #     search_keyword(soup, state.keyword)
-        send.send_data_server(url, url_list, x)                                 # Call function necessary for packaging and shipping the current page and it's URL connections
-        url = select_random_url(url_list)
+def depth_first_search(state, graph, url):
+    last_edges = []
+    x = 0
+    while x < state.depth:
+    # for x in range(state.depth):                                              # Loop through the search process for the search depth specified by the user
+        add_to_visited(graph, url)                                              # Add the node to the visited url list so that we don't repeat
+        soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
+        if soup:                                                                # If the page can be found (valid URL)
+            node = get_title(url, soup)                                         # Collect the page Title
+            edge_list = search_urls(soup, url)                                  # Collect All http and https URLs on the page
+            if edge_list:
+                last = url
+                last_edges = edge_list
+                build_nodes(graph, node, url, '#B0BEC5')
+                url = select_random_url(edge_list, graph)
+                build_edge_connections(graph, last, url)
+                x += 1
+            else:
+                build_nodes(graph, "{} (No Links On Page)".format(node), url, '#FF7043')    # Make color Orange
+                build_edge_connections(graph, last, url)
+                if x == 0:                                                      # If this is the starting URL
+                    break                                                       # Break the cycle because there are no links to follow
+                else:
+                    url = select_random_url(last_edges, graph)
+                    continue
+        else:
+            build_nodes(graph, "Invalid URL", url, '#E53935')                   # Make color red
+            if x == 0:                                                          # If this is the starting URL
+                break                                                           # Break the cycle because page cannot be loaded
+            else:
+                continue
+            x += 1
+    graph.package_graph()
+    send.write_json_file(graph.graph)
+    reset_graph(graph)                                                          # Ensures that the graph class objects are deleted once complete (Get weird errors if not)
 
+"""
+********************************************************************************
+* Description: build_nodes function
+********************************************************************************
+"""
 
+def add_to_visited(graph, url):
+    graph.visited.append(url)
+
+"""
+********************************************************************************
+* Description: build_nodes function
+********************************************************************************
+"""
+
+def build_nodes(graph, node, link, color):
+    print(node)
+    print(link)
+    graph.add_nodes(node, link, color)
+
+"""
+********************************************************************************
+* Description: build_connections function
+********************************************************************************
+"""
+
+def build_edge_connections(graph, node, connection):
+    graph.add_edges(node, connection)
+
+"""
+********************************************************************************
+* Description: get_page function
+********************************************************************************
+"""
+
+def get_page(url):
+    try:
+        html_res = requests.get(url)                                            # Get the content from the current webpage and assign to variable
+        soup = BeautifulSoup(html_res.text, 'html.parser')                      # Parse the HTML text return from the res.text object (Return beautiful soup object)
+        return soup
+    except:
+        return False
+
+"""
+********************************************************************************
+* Description: get_title function
+********************************************************************************
+"""
+
+def get_title(url, soup):
+    try:
+        return soup.title.string.strip()                                        # Return page title with leading and trailing spaces removed
+    except:
+        return "Page Title Not Found"
 """
 ********************************************************************************
 * Description: search_urls function
@@ -83,60 +168,39 @@ def depth_first_search(state, url):
 ********************************************************************************
 """
 
-def search_urls(urls):                                                          # Set the first URL to the input provided in the command line
-    soup = collect_page_details(urls)                                           # Call function to grab HTML information from the specified web page (Send the page)
-    url_list = collect_links(urls, soup)                                        # Call function to collect Links (anchor tags) from pages
-    return soup, url_list
-
-"""
-********************************************************************************
-* Description: collect_page_details function
-* Function uses the requests library to collect the HTML information from a
-* webpage.  It next uses the BeautifulSoup library to parse the HTML information
-* into a BeautifulSoup Object.  The BeautifulSoup Object is returned to the
-* calling function.
-********************************************************************************
-"""
-
-def collect_page_details(url):
-    html_res = requests.get(url)                                                # Get the content from the current webpage and assign to variable
-    soup = BeautifulSoup(html_res.text, "html.parser")                          # Parse the HTML text return from the res.text object (Return beautiful soup object)
-    return soup                                                                 # Return the parsed BeautifulSoup object to the calling function
-
-"""
-********************************************************************************
-* Description: collect_links function
-* Function collects all URL Information that exists on the page and creates a
-* list to be returned to the calling function.  If the URL does not begin with
-* https or http (i.e. links on the /intl/en/policies/terms/ on google.com) then
-* I append the full URL name to the beginning of the string before adding to
-* returned list.
-********************************************************************************
-"""
-
-def collect_links(url, soup):
+def search_urls(soup, urls):                                                    # Set the first URL to the input provided in the command line
     links = []                                                                  # Establish an empty list that will eventually hold the list of urls
     for anchor in soup.find_all('a', href=True):                                # Loop through each anchor tag found in the parsed BeautifulSoup Object
-        if not anchor.get('href').startswith("http"):                           # If the found URL does not begin with http or https
-            page = url + anchor.get('href')                                     # Add the initial full URL name to the beginning of the string
-        else:                                                                   # Otherwise
-            page = anchor.get('href')                                           # Just use the name that was found by the scraper
-        links.append(page)                                                      # Append the URL link to the list
+        if anchor.get('href').startswith("http"):                               # If the found URL does not begin with http or https, Ignore it (TRY TO FIX THIS LATER)
+            links.append(anchor.get('href'))                                    # Append the URL link to the list
+
     return links                                                                # Return the URL links list to the calling function
 
 """
 ********************************************************************************
 * Description: search_keyword function
-* THIS FUNCTIONALITY WILL BE IMPLEMENTED NEXT WEEK
-* ******* PRIORITY *******
 ********************************************************************************
 """
 
 def search_keyword(soup, keyword):
-    # texts = soup.find_all('h1',text=True)
-    for node in soup.findAll('p'):
-        text = ''.join(node.findAll(text=True))
-    print(text)
+    results = soup.body.find_all(string=re.compile('.*{0}.*'.format(keyword)), recursive=True)
+    print('Found the word "{0}" {1} times\n'.format(keyword, len(results)))
+
+    for content in results:
+        words = content.split()
+        for index, word in enumerate(words):
+            # If the content contains the search word twice or more this will fire for each occurence
+            if word == keyword:
+                print('Whole content: "{0}"'.format(content))
+                before = None
+                after = None
+                # Check if it's a first word
+                if index != 0:
+                    before = words[index-1]
+                # Check if it's a last word
+                if index != len(words)-1:
+                    after = words[index+1]
+                print('\tWord before: "{0}", word after: "{1}"'.format(before, after))
 
 """
 ********************************************************************************
@@ -146,5 +210,21 @@ def search_keyword(soup, keyword):
 ********************************************************************************
 """
 
-def select_random_url(url_list):
-    return(random.choice(url_list))                                             # Return a randomly selected URL from the list
+def select_random_url(url_list, graph):
+    print(graph.visited)
+    random = choice(url_list)                                                   # Return a randomly selected URL from the list
+    if random in graph.visited:
+        select_random_url(url_list, graph)
+    return random
+
+"""
+********************************************************************************
+* Description: reset_graph function
+********************************************************************************
+"""
+
+def reset_graph(graph):
+    graph.visited = []
+    graph.nodes = {}
+    graph.edges = {}
+    del graph

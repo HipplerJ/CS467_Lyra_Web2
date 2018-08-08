@@ -27,7 +27,7 @@ import os
 import sys
 sys.path.append('web_crawler/')                                                 # Add the python crawler directory to the system path
 import threading
-from flask import Flask, render_template, url_for, redirect, request, make_response
+from flask import Flask, render_template, url_for, redirect, request
 from wtforms import Form, StringField, IntegerField, RadioField, validators
 import crawler as crawl
 import validators
@@ -136,5 +136,4 @@ def results():
     return render_template('results.html')
 
 if __name__ == '__main__':
-    app.debug = True      # FIXME remove when done debugging
-    app.run(debug=True, port=7777, threaded=True)
+    app.run(host="0.0.0.0", debug=True, port=7777, threaded=True)

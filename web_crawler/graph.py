@@ -17,12 +17,27 @@
 """
 
 class build_graph():
-    nodes = {}
-    edges = {}
 
-    def add_node(self, node):
-        self.nodes.update(node)
+    def __init__(self):
+        self.visited = []
+        self.nodes = {}
+        self.edges = {}
+        self.graph = {}
 
-    def add_edges(self, edges):
-        for x in range(len(edges)):
-            self.edges.update(edges[x])
+    def add_nodes(self, node, url, color):
+        color = { 'color': color }
+        label = { 'label': node }
+        self.nodes[url] = { 'url': url }
+        self.nodes[url].update(color)
+        self.nodes[url].update(label)
+
+    def add_edges(self, node, edge):
+        connection = { edge: {} }
+        if node not in self.edges:
+            self.edges[node] = connection
+        else:
+            self.edges[node].update(connection)
+
+    def package_graph(self):
+        self.graph['nodes'] = self.nodes
+        self.graph['edges'] = self.edges

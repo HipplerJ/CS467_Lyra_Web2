@@ -15,6 +15,7 @@
 ** Filename: search_state.py
 **
 ** Example Form Return:
+** {'starting_url': 'https://www.google.com', 'method': 'value', 'depth': 12, 'keyword': 'find me'}
 ********************************************************************************
 """
 
@@ -25,13 +26,21 @@
 """
 
 class search_state():
-    num_arguments = None
-    starting_url = None                                                         # Create variable for the starting URL (Initialize to None)
-    breadth_search = None                                                       # Create variable to determine if Breadth search is Used (Initialize to None)
-    depth_search = None                                                         # Create variable to determine if Depth search is Used (Initialize to None)
-    depth = None                                                                # Create variable for the search limit depth (Initialize to N)
-    keyword_used = None                                                         # Create variable to determine if the optional keyword was included (Initialize to None)
-    keyword = False                                                             # Create variable for the optional keyword string (Initializae to False)
+
+    """
+    ****************************************************************************
+    * Description: __init__ function
+    ****************************************************************************
+    """
+
+    def __init__(self):
+        self.num_arguments = None
+        self.starting_url = None                                                # Create variable for the starting URL (Initialize to None)
+        self.breadth_search = None                                              # Create variable to determine if Breadth search is Used (Initialize to None)
+        self.depth_search = None                                                # Create variable to determine if Depth search is Used (Initialize to None)
+        self.depth = None                                                       # Create variable for the search limit depth (Initialize to N)
+        self.keyword_used = None                                                # Create variable to determine if the optional keyword was included (Initialize to None)
+        self.keyword = False                                                    # Create variable for the optional keyword string (Initializae to False)
 
     """
     ****************************************************************************
@@ -41,8 +50,8 @@ class search_state():
 
     def initialize_state(self, form_data):
         self.num_args(len(form_data))                                           # Call the function to reference and store the number of arguments
-        self.start_page(form_data['starting_url'])                              # Call the function to reference and store the starting URL
         self.search_type(form_data['method'])                                   # Call the function to reference and store the search type
+        self.start_page(form_data['starting_url'])                              # Call the function to reference and store the starting URL
         self.depth_limit(form_data['depth'])                                    # Call the function to reference and store the limit for the search depth
         if form_data['keyword']:                                                # If the number of the arguments is five then then the optional keyword was input
             self.set_keyword(form_data['keyword'])                              # Call the function to  reference and store the keyword elements
@@ -86,7 +95,14 @@ class search_state():
     """
 
     def depth_limit(self, dep_lim):
-        self.depth = int(dep_lim)                                               # Set the search to the limit from the form (as an integer)
+        if int(dep_lim) < 1:
+            self.depth = 1
+        elif self.breadth_search and int(dep_lim) > 3:
+            self.depth = 3
+        elif self.depth_search and int(dep_lim) > 100:
+            self.depth = 100
+        else:
+            self.depth = int(dep_lim)                                           # Set the search to the limit from the form (as an integer)
 
     """
     ****************************************************************************
