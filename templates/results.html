@@ -3,7 +3,6 @@
 {% block body %}
 
   <!-- arbor.js graphical visualization library and helpers -->
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/arbor.js') }}"></script>
   <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/graphics.js') }}"></script>
   <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/renderer.js') }}"></script>
@@ -38,7 +37,7 @@
     <!-- <div id="testdata"></div> -->
 
     <!-- script that opens json file and draws graph of json objects -->
-    <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/draw-results.js') }}"></script>
+    <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/results.js') }}"></script>
 
 
 {% endblock %}
