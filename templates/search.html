@@ -1,27 +1,22 @@
 {% extends 'layout.html' %}
 
+
 {% block body %}
-  <!-- <div class="jumbotron text-center">
-    <h1>Crawler Search Page</h1>
-  </div> -->
+
 
   <div class="jumbotron">
-
     <h1>Search Parameters</h1>
-
     {% if url_list %}
       <p>Welcome back! Your previously crawled URL's can be found in the dropdown below:</p>
     {% endif %}
-
     <hr class="my-4">
     <p class="lead">
 
-    {% from "includes/_form_helpers.html" import render_field %}
+    <!-- {% from "includes/_form_helpers.html" import render_field %} -->
     <form action="/search" class="search" method="POST">
 
       <!-- starting_url input -->
       <div class="form-group">
-
         <!-- if cookie, render a dropdown/text entry -->
         {% if url_list %}
           <label for="starting_url">Starting URL:</label>
@@ -37,49 +32,38 @@
           <!-- {{ render_field(form.starting_url, class_="form-control") }} -->
           <label for="starting_url">Starting URL:</label>
           <input class="form-control" id="starting_url" required type="text" name="starting_url" value>
-
         {% endif %}
-
       </div>
 
       <!-- Radio input for method -->
       <div class="form-group">
-        <!-- {% for subfield in form.method %}
-          <tr>
-            <td>{{ subfield }}</td>
-            <td>{{ subfield.label }}</td>
-          </tr>
-        {% endfor %} -->
         <input id="method-0" name="method" type="radio"  value="breadth" checked="checked" required>
         <label for="method-0">Breadth First</label>
         <input id="method-1" name="method" type="radio"  value="depth">
         <label for="method-1">Depth First</label>
-
       </div>
 
       <!-- input for depth -->
       <div class="form-group">
-        <!-- {{ render_field(form.depth) }} -->
         <label for="depth">Search Depth:</label>
         <!-- TODO change min and max depending on if bfs or dfs is set (js listener), change to int-->
-        <input id="depth" name="depth" required type="number" value>
+        <input id="depth" name="depth" required type="number" size="4" value>
         <small id="depthHelp" class="form-text text-muted">Max depth for breadth first traversal is 3 steps</small>
       </div>
 
       <!-- Text input for optional keyword -->
       <div class="form-group">
-        <!-- {{ render_field(form.keyword, class_="form-control") }} -->
         <label for="keyword">Keyword (optional):</label>
         <input class="form-control" id="keyword" name="keyword" type="text" value>
-
       </div>
 
       <!-- Submit button -->
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-
   </div>
 
-  <!-- search.js -->
+  <!-- search.js script -->
   <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
+
+  
 {% endblock %}

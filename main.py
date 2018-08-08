@@ -23,82 +23,112 @@
 ********************************************************************************
 """
 
+import os
 import sys
 sys.path.append('web_crawler/')                                                 # Add the python crawler directory to the system path
 import threading
 from flask import Flask, render_template, url_for, redirect, request, make_response
 from wtforms import Form, StringField, IntegerField, RadioField, validators
 import crawler as crawl
+import validators
 
 
 app = Flask(__name__)
 
-class SearchForm(Form):
-    starting_url    = StringField('Starting URL:', [validators.Length(min=1), validators.URL(message='Please Enter a Valid URL (example https://oregonstate.edu)'), validators.InputRequired()])
-    method          = RadioField('Search Method:', choices=[('breadth','Breadth First'),('depth','Depth First')], validators =  [validators.InputRequired()])
-    # method          = RadioField('Search Method', choices=[('breadth','Breadth First'),('depth','Depth First')], validators = [validators.InputRequired(message='A Search Method must be Selected')])
-    depth           = IntegerField('Search Depth:', [validators.InputRequired(message='Search Depth Maximum is 3 for Breadth and 100 for Depth')])
-    keyword         = StringField('Keyword (Optional):')
 
 # Routing for the Home (main) page
 @app.route('/')
 def index():
     return render_template('home.html')
 
+
+# Form validator function: validates url and keyword
+def form_validator(url, keyword):
+    # Validate url
+    if validators.domain(url) != True:
+        # TODO Display error message
+        print("Invalid url")
+        return False
+
+    # Validate keyword - check if is alphabetic
+    if keyword.isalpha() != True and keyword != "":
+        print("Keyword must be alphabetic characters only")
+        return False
+
+    return True
+
+
 # Routing for the Search Form Page
 @app.route('/search', methods=['GET', 'POST'])
 def search():
 
-    # instantiate WTForm object
-    form = SearchForm(request.form)
-
-    # check for previously set cookies
+    # Check cookies to see if we have previously saved searches
     url_cookie = request.cookies.get('urls')
-    delimiter = ", "   # delimiter for urls when they're saved as a string
+    # Use this delimiter for urls when they're saved as a string
+    delimiter = ", "
 
-    # If the user has posted valid data from the form
-    # if request.method == 'POST' and form.validate():
+    # If the user has posted data from the form to this url
     if request.method == 'POST':
 
-        # Call crawler
-        # crawler_thread = threading.Thread(target=crawl.crawler, args=form.data)
-        # crawler_thread.start()
-        # app.logger.info(form.data)
-        # crawl.crawler(form.data)      # Call function to perform crawl using the Form submissions on the the search routes
+        # Get variables from the form
+        url = request.form['starting_url']
+        method = request.form['method']
+        depth = request.form['depth']
+        keyword = request.form['keyword']
 
-        # use make_response so we can set cookies
-        # create response object with redirect to 'results' as action
-        response = make_response(redirect(url_for('results', code=307)))
+        # FIXME Make form object to send to crawler??
+        # form = {'starting_url': url, 'method': method, 'depth':depth, 'keyword' : keyword}
 
-        # if a cookie is already set, append the new url to the cookie string
-        if url_cookie:
-            # TODO if url isn't already saved
-            if form.starting_url.data not in url_cookie:
+        # Validate input
+        if form_validator(url, keyword):
 
-                # append url to cookie string with ", " delimiter
-                url_cookie += ", " + form.starting_url.data
-                response.set_cookie('urls', url_cookie) # set the new cookie
+            # FIXME Trace statements
+            print("Starting url: %s" %url)
+            print("Method: %s" %method)
+            print("Depth: %s" %depth)
+            print("Keyword: %s" %keyword)
 
-        # else, if no 'urls' cookie yet, set urls cookie to new url
+            # Call crawler
+            # crawler_thread = threading.Thread(target=crawl.crawler, args=form.data)
+            # crawler_thread.start()
+            # app.logger.info(form.data)
+            # crawl.crawler(form.data)      # Call function to perform crawl using the Form submissions on the the search routes
+
+            # Use make_response to create response object so we can set cookies
+            # Create response object that redirects to 'results' url
+            response = make_response(redirect(url_for('results', code=307)))
+
+            # If a cookie is already set, append the new url to the cookie string
+            if url_cookie:
+                if url not in url_cookie:
+                    # FIXME append url to cookie string with ", " delimiter
+                    url_cookie += ", " + url
+                    response.set_cookie('urls', url_cookie)
+
+            # Else, if no 'urls' cookie yet, create 'urls' cookie and add new url
+            else:
+                response.set_cookie('urls', url)
+
+            # Set the cookie and redirect to the results page
+            return response
+
+        # TODO Else if form is not valid, redirect back to search page and display warnings
         else:
-            response.set_cookie('urls', form.starting_url.data)
+            # TODO Add error messaging (search takes error parameter error = None? then {$if error$} show the error?)
+            return redirect(url_for('search'))
 
-        # set the cookie and redirect to results page
-        return response
-
-    # else if the user arrived via GET request from homepage
+    # Else if the user arrived via GET request from homepage, render the search form
     else:
-
+        # Instantiate url_list to None
         url_list = None
 
-        # if a cookie is set, send it as a list to the search template
-        # to be rendered within dropdown input
+        # If we have previously saved searches, save as list in url_list to be
+        # used in dropdown input form
         if url_cookie:
-            url_list = url_cookie.split(delimiter)     # split into list
-            # render_template('search.html', form=form, url_list=url_list) # render search.html with url_list
+            url_list = url_cookie.split(delimiter)
 
-        # render the search form template
-        return render_template('search.html', form=form, url_list=url_list)
+        # Render the search form template with either a list of url's or nothing
+        return render_template('search.html', url_list=url_list)
 
 # Routing for Search Results
 @app.route('/results', methods=['GET', 'POST'])
