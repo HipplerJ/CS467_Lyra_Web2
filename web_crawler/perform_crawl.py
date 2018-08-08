@@ -78,27 +78,27 @@ def depth_first_search(state, graph, url):
         add_to_visited(graph, url)                                              # Add the node to the visited url list so that we don't repeat
         soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
         if soup:                                                                # If the page can be found (valid URL)
-            last = url
             node = get_title(url, soup)                                         # Collect the page Title
             edge_list = search_urls(soup, url)                                  # Collect All http and https URLs on the page
             if edge_list:
+                last = url
                 last_edges = edge_list
-                build_nodes(graph, node, url, 'green')
+                build_nodes(graph, node, url, '#B0BEC5')
                 url = select_random_url(edge_list, graph)
                 build_edge_connections(graph, last, url)
                 x += 1
             else:
-                build_nodes(graph, node, url, 'red')
+                build_nodes(graph, "{} (No Links On Page)".format(node), url, '#FF7043')    # Make color Orange
                 build_edge_connections(graph, last, url)
-                if x == 0:
-                    break
+                if x == 0:                                                      # If this is the starting URL
+                    break                                                       # Break the cycle because there are no links to follow
                 else:
                     url = select_random_url(last_edges, graph)
                     continue
         else:
-            build_nodes(graph, "Invalid URL", url, 'red')
-            if x == 0:
-                break                                                         # Break the cycle because page cannot be loaded
+            build_nodes(graph, "Invalid URL", url, '#E53935')                   # Make color red
+            if x == 0:                                                          # If this is the starting URL
+                break                                                           # Break the cycle because page cannot be loaded
             else:
                 continue
             x += 1
@@ -211,8 +211,9 @@ def search_keyword(soup, keyword):
 """
 
 def select_random_url(url_list, graph):
+    print(graph.visited)
     random = choice(url_list)                                                   # Return a randomly selected URL from the list
-    if random in graph.nodes:
+    if random in graph.visited:
         select_random_url(url_list, graph)
     return random
 
