@@ -28,7 +28,6 @@ import sys
 sys.path.append('web_crawler/')                                                 # Add the python crawler directory to the system path
 import threading
 from flask import Flask, render_template, url_for, redirect, request
-from wtforms import Form, StringField, IntegerField, RadioField, validators
 import crawler as crawl
 import validators
 
