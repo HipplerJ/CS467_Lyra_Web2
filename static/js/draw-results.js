@@ -18,14 +18,14 @@ $(window).resize(function(){
 })
 
 // test: open dummy json file with .getJSON and display contents using $.getJSON
-$.getJSON('/static/json/crawler_results/results.json', function(data){
+$.getJSON('/static/json/crawler_results/results.json?' + new Date().getTime(), function(data){
 
   var nodes = data.nodes
 
   // add label to each node - same as name (key)
-  $.each(nodes, function(key, value){
-    value.label=key
-  })
+  // $.each(nodes, function(key, value){
+  //   value.label=key
+  // })
 
   // FIXME trace: display json file data in page
   // reference: https://api.jquery.com/jquery.getjson/

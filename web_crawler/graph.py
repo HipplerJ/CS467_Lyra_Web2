@@ -24,8 +24,12 @@ class build_graph():
         self.edges = {}
         self.graph = {}
 
-    def add_nodes(self, node, url):
-        self.nodes[node] = { 'url': url }
+    def add_nodes(self, node, url, color):
+        color = { 'color': color }
+        label = { 'label': node }
+        self.nodes[url] = { 'url': url }
+        self.nodes[url].update(color)
+        self.nodes[url].update(label)
 
     def add_edges(self, node, edge):
         connection = { edge: {} }
