@@ -91,7 +91,7 @@ def search():
             # crawler_thread = threading.Thread(target=crawl.crawler, args=form.data)
             # crawler_thread.start()
             # app.logger.info(form.data)
-            # crawl.crawler(form.data)      # Call function to perform crawl using the Form submissions on the the search routes
+            crawl.crawler(url, method, depth, keyword)      # Call function to perform crawl using the Form submissions on the the search routes
 
             # Use make_response to create response object so we can set cookies
             # Create response object that redirects to 'results' url

@@ -34,7 +34,6 @@ class search_state():
     """
 
     def __init__(self):
-        self.num_arguments = None
         self.starting_url = None                                                # Create variable for the starting URL (Initialize to None)
         self.breadth_search = None                                              # Create variable to determine if Breadth search is Used (Initialize to None)
         self.depth_search = None                                                # Create variable to determine if Depth search is Used (Initialize to None)
@@ -48,22 +47,12 @@ class search_state():
     ****************************************************************************
     """
 
-    def initialize_state(self, form_data):
-        self.num_args(len(form_data))                                           # Call the function to reference and store the number of arguments
+    def initialize_state(url, method, depth, keyword):
         self.search_type(form_data['method'])                                   # Call the function to reference and store the search type
-        self.start_page(form_data['starting_url'])                              # Call the function to reference and store the starting URL
-        self.depth_limit(form_data['depth'])                                    # Call the function to reference and store the limit for the search depth
-        if form_data['keyword']:                                                # If the number of the arguments is five then then the optional keyword was input
-            self.set_keyword(form_data['keyword'])                              # Call the function to  reference and store the keyword elements
-
-    """
-    ****************************************************************************
-    * Description: num_args function
-    ****************************************************************************
-    """
-
-    def num_args(self, arguments):
-        self.num_arguments = arguments
+        self.start_page(url)                                                    # Call the function to reference and store the starting URL
+        self.depth_limit(depth)                                                 # Call the function to reference and store the limit for the search depth
+        if keyword:                                                             # If the number of the arguments is five then then the optional keyword was input
+            self.set_keyword(keyword)                                           # Call the function to  reference and store the keyword elements
 
     """
     ****************************************************************************
