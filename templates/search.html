@@ -14,27 +14,27 @@
     <hr class="my-4">
     <p class="lead">
 
+    {% with messages = get_flashed_messages() %}
+    <!-- add warning to div if there's flashed error message -->
+    {% if messages %}
+    <div class="form-group row has-warning">
+      <!-- Print error message(s) -->
+      {% for message in messages %}
+        <small id="inputError" class="form-text text-muted" style="'color':red;">{{ message }}</small>
+
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+
+
+
     <!-- {% from "includes/_form_helpers.html" import render_field %} -->
     <form action="/search" class="search" method="POST">
 
-
-      {% with messages = get_flashed_messages() %}
-
       <!-- starting_url input -->
-      <!-- add warning to div if there's flashed error message -->
-      {% if messages %}
-      <div class="form-group row has-warning">
-        <!-- Print error message(s) -->
-        {% for message in messages %}
-          <small id="inputError" class="form-text text-muted" style="color:red;">{{ message }}</small>
-
-        {% endfor %}
-
-
-      {% else %}
       <div class="form-group">
-      {% endif %}
-      {% endwith %}
         <!-- if cookie, render a dropdown/text entry -->
         {% if url_list %}
           <label for="starting_url">Starting URL:</label>
