@@ -3,6 +3,8 @@
 
 {% block body %}
 
+  <!-- load validate.js script into memory -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.12.0/validate.min.js"></script>
 
   <div class="jumbotron">
     <h1>Search Parameters</h1>
@@ -15,8 +17,24 @@
     <!-- {% from "includes/_form_helpers.html" import render_field %} -->
     <form action="/search" class="search" method="POST">
 
+
+      {% with messages = get_flashed_messages() %}
+
       <!-- starting_url input -->
+      <!-- add warning to div if there's flashed error message -->
+      {% if messages %}
+      <div class="form-group row has-warning">
+        <!-- Print error message(s) -->
+        {% for message in messages %}
+          <small id="inputError" class="form-text text-muted" style="color:red;">{{ message }}</small>
+
+        {% endfor %}
+
+
+      {% else %}
       <div class="form-group">
+      {% endif %}
+      {% endwith %}
         <!-- if cookie, render a dropdown/text entry -->
         {% if url_list %}
           <label for="starting_url">Starting URL:</label>
@@ -27,11 +45,19 @@
             {% endfor %}
           </datalist>
 
+          <!-- {% if url_error %} -->
+          <!-- <small id="urlError" class="form-text text-muted" style="color:red;">{{ url_error }}</small> -->
+          <!-- {% endif %} -->
+
         <!-- else, if no cookie, render a normal text input form -->
         {% else %}
-          <!-- {{ render_field(form.starting_url, class_="form-control") }} -->
           <label for="starting_url">Starting URL:</label>
           <input class="form-control" id="starting_url" required type="text" name="starting_url" value>
+
+          <!-- {% if url_error %} -->
+          <!-- <small id="urlError" class="form-text text-muted">{{ url_error }}</small> -->
+          <!-- {% endif %} -->
+
         {% endif %}
       </div>
 
@@ -55,6 +81,10 @@
       <div class="form-group">
         <label for="keyword">Keyword (optional):</label>
         <input class="form-control" id="keyword" name="keyword" type="text" value>
+        <!-- FIXME If keyword error, print warning -->
+        <!-- {% if keyword_error %} -->
+        <!-- <small id="keywordError" class="form-text text-muted" style="color:red;">{{ keyword_error }}</small> -->
+        <!-- {% endif %} -->
       </div>
 
       <!-- Submit button -->
@@ -65,5 +95,5 @@
   <!-- search.js script -->
   <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
 
-  
+
 {% endblock %}
