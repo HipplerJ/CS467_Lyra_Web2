@@ -82,11 +82,6 @@ def search():
         # FIXME Make form object to send to crawler??
         form_data = {'starting_url': url, 'method': method, 'depth':depth, 'keyword' : keyword}
 
-        # Set url_error if url is invalid
-        url_error = None
-        # Set keyword_error if keyword is invalid
-        keyword_error = None
-
         # Validate url
         if url_validator(url):
 
