@@ -47,12 +47,12 @@ class search_state():
     ****************************************************************************
     """
 
-    def initialize_state(url, method, depth, keyword):
-        self.search_type(form_data['method'])                                   # Call the function to reference and store the search type
+    def initialize_state(url, method, depth, key_word):
+        self.search_type(method)                                   # Call the function to reference and store the search type
         self.start_page(url)                                                    # Call the function to reference and store the starting URL
         self.depth_limit(depth)                                                 # Call the function to reference and store the limit for the search depth
-        if keyword:                                                             # If the number of the arguments is five then then the optional keyword was input
-            self.set_keyword(keyword)                                           # Call the function to  reference and store the keyword elements
+        if key_word:                                                             # If the number of the arguments is five then then the optional keyword was input
+            self.set_keyword(key_word)                                           # Call the function to  reference and store the keyword elements
 
     """
     ****************************************************************************
