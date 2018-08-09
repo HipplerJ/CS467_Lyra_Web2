@@ -20,7 +20,8 @@
     <div class="form-group row has-warning">
       <!-- Print error message(s) -->
       {% for message in messages %}
-        <small id="inputError" class="form-text text-muted" style="'color':red;">{{ message }}</small>
+        <!-- <small id="inputError" class="form-text text-muted" style="'color':red;">{{ message }}</small> -->
+        <small id="inputError" class="form-text has-warning" style="'color':red;">{{ message }}</small>
 
       {% endfor %}
     </div>
