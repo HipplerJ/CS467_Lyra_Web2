@@ -19,7 +19,6 @@
 class build_graph():
 
     def __init__(self):
-        self.map = {}
         self.nodes = {}
         self.edges = {}
         self.graph = {}
