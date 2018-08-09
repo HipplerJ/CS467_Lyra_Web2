@@ -29,6 +29,7 @@ from random import choice                                                       
 import requests                                                                 # Import the requests python library to make HTML requests and download data
 from bs4 import BeautifulSoup                                                   # Import the BeautifulSoup library to navigate through HTML with Python
 import re
+from collections import defaultdict
 
 """
 ********************************************************************************
@@ -71,34 +72,40 @@ def breadth_first_search(state, graph, url):
 """
 
 def depth_first_search(state, graph, url):
-    x = 0
-    while x < state.depth:
-    # for x in range(state.depth):                                              # Loop through the search process for the search depth specified by the user
-        graph.visited.append(url)
+    level = 0
+    map_nodes = []
+    map_edges = []
+    for x in range(state.depth):                                                # Loop through the search process for the search depth specified by the user
+        map_nodes.append(url)
         soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
         if soup:                                                                # If the page can be found (valid URL)
             node = get_title(url, soup)                                         # Collect the page Title
             edge_list = search_urls(soup, url)                                  # Collect All http and https URLs on the page
             if edge_list:
-                graph.add_nodes(node, link, '#B0BEC5')
-                url = select_random_url(edge_list, graph)
-                build_edge_connections(graph, last, url)
-                x += 1
+                level += 1
+                map_edges.append(edge_list)
+                graph.add_nodes(node, url, '#B0BEC5')                           # Add the node to arborjs with the color green
+                url = select_random_url(edge_list, map_nodes)
+                if x > 0:
+                    build_edge_connections(graph, map_nodes[level - 1], url)
             else:
                 graph.add_nodes("{} (No Links On Page)".format(node), url, '#FF7043')
-                build_edge_connections(graph, last, url)
-                if x == 0:                                                      # If this is the starting URL
-                    break                                                       # Break the cycle because there are no links to follow
-                else:
-                    url = select_random_url(last_edges, graph)
+                if x > 0:
+                    build_edge_connections(graph, map_nodes[level - 1], url)
+                    url = select_random_url(map_edges[level], map_nodes)
                     continue
+                else:                                                            # If this is the starting URL
+                    break                                                       # Break the cycle because there are no links to follow
+
         else:
             graph.add_nodes("{} (Invalid URL)".format(url), url, '#E53935')
             if x == 0:                                                          # If this is the starting URL
                 break                                                           # Break the cycle because page cannot be loaded
             else:
                 continue
-            x += 1
+
+    print(map_nodes)
+    print(map_edges)
     graph.package_graph()
     send.write_json_file(graph.graph)
     reset_graph(graph)                                                          # Ensures that the graph class objects are deleted once complete (Get weird errors if not)
@@ -186,11 +193,10 @@ def search_keyword(soup, keyword):
 ********************************************************************************
 """
 
-def select_random_url(url_list, graph):
-    print(graph.visited)
+def select_random_url(url_list, nodes):
     random = choice(url_list)                                                   # Return a randomly selected URL from the list
-    if random in graph.visited:
-        select_random_url(url_list, graph)
+    if random in nodes:
+        select_random_url(url_list, nodes)
     return random
 
 """
