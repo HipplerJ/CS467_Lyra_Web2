@@ -104,7 +104,7 @@ def search():
                 # crawler_thread.start()
                 # app.logger.info(form.data)
                 # crawl.crawler(form.data)      # Call function to perform crawl using the Form submissions on the the search routes
-                # crawl.crawler(form_data)
+                crawl.crawler(url, method, depth, keyword)
 
                 # Use make_response to create response object so we can set cookies
                 # Create response object that redirects to 'results' url
@@ -121,10 +121,6 @@ def search():
                 else:
                     response.set_cookie('urls', url)
 
-                # TODO Since everything is valid, delete any url_error or keyword_error cookies
-                response.set_cookie('url_error', '', expires=0)
-                response.set_cookie('keyword_error', '', expires=0)
-
                 # Set the cookie and redirect to the results page
                 return response
 
@@ -136,7 +132,6 @@ def search():
                 # Flash the error message to session cookie and redirect back to page
                 flash(keyword_error)
                 return redirect(url_for('search'))
-
 
         # Else if url is not valid, redirect back to search page and display url error
         else:

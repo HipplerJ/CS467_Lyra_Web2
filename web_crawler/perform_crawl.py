@@ -71,24 +71,21 @@ def breadth_first_search(state, graph, url):
 """
 
 def depth_first_search(state, graph, url):
-    last_edges = []
     x = 0
     while x < state.depth:
     # for x in range(state.depth):                                              # Loop through the search process for the search depth specified by the user
-        add_to_visited(graph, url)                                              # Add the node to the visited url list so that we don't repeat
+        graph.visited.append(url)
         soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
         if soup:                                                                # If the page can be found (valid URL)
             node = get_title(url, soup)                                         # Collect the page Title
             edge_list = search_urls(soup, url)                                  # Collect All http and https URLs on the page
             if edge_list:
-                last = url
-                last_edges = edge_list
-                build_nodes(graph, node, url, '#B0BEC5')
+                graph.add_nodes(node, link, '#B0BEC5')
                 url = select_random_url(edge_list, graph)
                 build_edge_connections(graph, last, url)
                 x += 1
             else:
-                build_nodes(graph, "{} (No Links On Page)".format(node), url, '#FF7043')    # Make color Orange
+                graph.add_nodes("{} (No Links On Page)".format(node), url, '#FF7043')
                 build_edge_connections(graph, last, url)
                 if x == 0:                                                      # If this is the starting URL
                     break                                                       # Break the cycle because there are no links to follow
@@ -96,7 +93,7 @@ def depth_first_search(state, graph, url):
                     url = select_random_url(last_edges, graph)
                     continue
         else:
-            build_nodes(graph, "Invalid URL", url, '#E53935')                   # Make color red
+            graph.add_nodes("{} (Invalid URL)".format(url), url, '#E53935')
             if x == 0:                                                          # If this is the starting URL
                 break                                                           # Break the cycle because page cannot be loaded
             else:
@@ -105,26 +102,6 @@ def depth_first_search(state, graph, url):
     graph.package_graph()
     send.write_json_file(graph.graph)
     reset_graph(graph)                                                          # Ensures that the graph class objects are deleted once complete (Get weird errors if not)
-
-"""
-********************************************************************************
-* Description: build_nodes function
-********************************************************************************
-"""
-
-def add_to_visited(graph, url):
-    graph.visited.append(url)
-
-"""
-********************************************************************************
-* Description: build_nodes function
-********************************************************************************
-"""
-
-def build_nodes(graph, node, link, color):
-    print(node)
-    print(link)
-    graph.add_nodes(node, link, color)
 
 """
 ********************************************************************************
@@ -159,7 +136,7 @@ def get_title(url, soup):
     try:
         return soup.title.string.strip()                                        # Return page title with leading and trailing spaces removed
     except:
-        return "Page Title Not Found"
+        return "{} (Title Not Found)".format(url)
 """
 ********************************************************************************
 * Description: search_urls function
@@ -173,7 +150,6 @@ def search_urls(soup, urls):                                                    
     for anchor in soup.find_all('a', href=True):                                # Loop through each anchor tag found in the parsed BeautifulSoup Object
         if anchor.get('href').startswith("http"):                               # If the found URL does not begin with http or https, Ignore it (TRY TO FIX THIS LATER)
             links.append(anchor.get('href'))                                    # Append the URL link to the list
-
     return links                                                                # Return the URL links list to the calling function
 
 """
