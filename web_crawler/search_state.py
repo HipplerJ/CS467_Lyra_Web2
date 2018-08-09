@@ -47,7 +47,7 @@ class search_state():
     ****************************************************************************
     """
 
-    def initialize_state(url, method, depth, key_word):
+    def initialize_state(self, url, method, depth, key_word):
         self.search_type(method)                                   # Call the function to reference and store the search type
         self.start_page(url)                                                    # Call the function to reference and store the starting URL
         self.depth_limit(depth)                                                 # Call the function to reference and store the limit for the search depth
