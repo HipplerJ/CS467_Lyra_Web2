@@ -27,7 +27,7 @@ import os
 import sys
 sys.path.append('web_crawler/')                                                 # Add the python crawler directory to the system path
 import threading
-from flask import Flask, render_template, url_for, redirect, request, make_response
+from flask import Flask, render_template, url_for, redirect, request, make_response, flash
 from wtforms import Form, StringField, IntegerField, RadioField, validators
 import crawler as crawl
 import validators
@@ -42,20 +42,16 @@ def index():
     return render_template('home.html')
 
 
-# Form validator function: validates url and keyword
+# URL validator function
 def url_validator(url):
-    # Validate url
     if validators.domain(url) != True:
-        # TODO Display error message
-        # print("Invalid url")
         return False
     return True
 
 
+# Keyword validator function - ensure only alphabetic characters
 def keyword_validator(keyword):
-    # Validate keyword - check if is alphabetic
     if keyword.isalpha() != True and keyword != "":
-        # print("Keyword must be alphabetic characters only")
         return False
     return True
 
@@ -97,10 +93,6 @@ def search():
             # Validate keyword
             if keyword_validator(keyword):
 
-
-
-
-
                 # FIXME Trace statements (DELETE)
                 print("Starting url: %s" %url)
                 print("Method: %s" %method)
@@ -141,33 +133,19 @@ def search():
                 # Set error message to be displayed on search form
                 keyword_error = "Invalid keyword submitted. Please enter a valid keyword (one word, alphabetic characters)"
 
-
-                response = make_response(redirect(url_for('search')))
-                # Set keyword error cookie
-                response.set_cookie('keyword_error', keyword_error)
-                # Remove url_error cookie since the url worked in this case
-                response.set_cookie('url_error', '', expires=0)
-                # Redirect back to this url '/search'
-                return response
+                # Flash the error message to session cookie and redirect back to page
+                flash(keyword_error)
+                return redirect(url_for('search'))
 
 
-                # TODO Add error messaging (search takes error parameter error = None? then {$if error$} show the error?)
-                # Render search form with error message (and cookies)
-                # render_template('search.html', url_list=url_list, url_error=url_error, keyword_error=keyword_error)
-
-        # TODO Else if url is not valid, redirect back to search page and display url error
+        # Else if url is not valid, redirect back to search page and display url error
         else:
             # Set error message to be displayed on search form
             url_error = "Invalid URL submitted. Please enter a valid URL"
 
-            # TODO Add error messaging (search takes error parameter error = None? then {$if error$} show the error?)
-            # Render search form with error message (and cookies)
-            # render_template('search.html', url_list=url_list, url_error=url_error, keyword_error=keyword_error)
-
-            # TODO Set url_error cookie and redirect to search (this) url
-            response = make_response(redirect(url_for('search')))
-            response.set_cookie('url_error', url_error)
-            return response
+            # Flash the error message to session cookie and redirect back to page
+            flash(url_error)
+            return redirect(url_for('search'))
 
     # Else if the user arrived via GET request from homepage, render the search form
     else:
@@ -189,4 +167,6 @@ def results():
     return render_template('results.html')
 
 if __name__ == '__main__':
+    # Set secret key for sessions, generated with python shell os.urandom(24)
+    app.secret_key = "b'\xb1\xc2\xe3\x01*\x12~\n.\x8a\x9f\xf3\xdb\x17t_\xb4A\xc5I\x83\xcb\x17\xd0'"
     app.run(host="0.0.0.0", debug=True, port=7777, threaded=True)
