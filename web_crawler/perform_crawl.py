@@ -80,7 +80,7 @@ def depth_first_search(state, graph, url):
             node = get_title(url, soup)                                         # Collect the page Title
             edge_list = search_urls(soup, url)                                  # Collect All http and https URLs on the page
             if edge_list:
-                graph.add_nodes(node, link, '#B0BEC5')
+                graph.add_nodes(node, url, '#B0BEC5')
                 url = select_random_url(edge_list, graph)
                 build_edge_connections(graph, last, url)
                 x += 1
