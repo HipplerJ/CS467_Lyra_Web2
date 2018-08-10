@@ -1,63 +1,66 @@
 {% extends 'layout.html' %}
-
-
 {% block body %}
 
-  <!-- load validate.js script into memory -->
+  <!-- Load validate.js script into memory -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.12.0/validate.min.js"></script>
 
   <div class="jumbotron">
     <h1>Search Parameters</h1>
+
+    <!-- Print welcome back message if they have used before -->
     {% if url_list %}
       <p>Welcome back! Your previously crawled URL's can be found in the dropdown below:</p>
     {% endif %}
     <hr class="my-4">
     <p class="lead">
 
+    <!-- Print error message if warning has been flashed -->
     {% with messages = get_flashed_messages() %}
-    <!-- add warning to div if there's flashed error message -->
     {% if messages %}
-    <div class="form-group row has-warning">
-      <!-- Print error message(s) -->
-      {% for message in messages %}
-        <!-- <small id="inputError" class="form-text text-muted" style="'color':red;">{{ message }}</small> -->
-        <small id="inputError" class="form-text has-warning" style="'color':red;">{{ message }}</small>
-
-      {% endfor %}
-    </div>
+    <!-- Print error message(s) -->
+    {% for message in messages %}
+      <small id="inputError" class="form-text has-warning" style="'color':red;">{{ message }}</small>
+    {% endfor %}
     {% endif %}
     {% endwith %}
 
+    <form class="form-horizontal" action="/search" class="search" method="POST">
 
-
-
-    <!-- {% from "includes/_form_helpers.html" import render_field %} -->
-    <form action="/search" class="search" method="POST">
-
-      <!-- starting_url input -->
+      <!-- Starting_url input -->
       <div class="form-group">
-        <!-- if cookie, render a dropdown/text entry -->
+        <!-- Render dropdown/text entry with previous urls if cookie is set -->
         {% if url_list %}
           <label for="starting_url">Starting URL:</label>
-          <input class="form-control" id="starting_url" name="starting_url" type="text" list="url_list" required>
-          <datalist id="url_list">
-            {% for url in url_list %}
-              <option value="{{ url }}"></option>
-            {% endfor %}
+          <!-- Add http:// to input group addon -->
+
+          <div class="input-group mb-3">
+
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="urlAddOn">http://</span>
+            </div>
+
+            <input class="form-control" placeholder="www.example.com" id="starting_url" name="starting_url" type="text" list="url_list" aria-describedby="urlAddOn" required>
+            <datalist id="url_list">
+              {% for url in url_list %}
+                <option value="{{ url }}"></option>
+              {% endfor %}
+          </div>
+
+
           </datalist>
 
-          <!-- {% if url_error %} -->
-          <!-- <small id="urlError" class="form-text text-muted" style="color:red;">{{ url_error }}</small> -->
-          <!-- {% endif %} -->
-
-        <!-- else, if no cookie, render a normal text input form -->
+        <!-- Else, if no cookie is set, render a normal text input field -->
         {% else %}
           <label for="starting_url">Starting URL:</label>
-          <input class="form-control" id="starting_url" required type="text" name="starting_url" value>
 
-          <!-- {% if url_error %} -->
-          <!-- <small id="urlError" class="form-text text-muted">{{ url_error }}</small> -->
-          <!-- {% endif %} -->
+          <div class="input-group mb-3">
+
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="urlAddOn">http://</span>
+            </div>
+
+            <input class="form-control" placeholder="www.example.com" id="starting_url" required type="text" name="starting_url" aria-describedby="urlAddOn" value>
+          </div>
 
         {% endif %}
       </div>
@@ -70,11 +73,10 @@
         <label for="method-1">Depth First</label>
       </div>
 
-      <!-- input for depth -->
+      <!-- Numerical input for depth -->
       <div class="form-group">
         <label for="depth">Search Depth:</label>
-        <!-- TODO change min and max depending on if bfs or dfs is set (js listener), change to int-->
-        <input id="depth" name="depth" required type="number" size="4" value>
+        <input id="depth" name="depth" required type="number" size="4" min="1" max="3" value>
         <small id="depthHelp" class="form-text text-muted">Max depth for breadth first traversal is 3 steps</small>
       </div>
 
@@ -82,14 +84,11 @@
       <div class="form-group">
         <label for="keyword">Keyword (optional):</label>
         <input class="form-control" id="keyword" name="keyword" type="text" value>
-        <!-- FIXME If keyword error, print warning -->
-        <!-- {% if keyword_error %} -->
-        <!-- <small id="keywordError" class="form-text text-muted" style="color:red;">{{ keyword_error }}</small> -->
-        <!-- {% endif %} -->
       </div>
 
       <!-- Submit button -->
       <button type="submit" class="btn btn-primary">Submit</button>
+
     </form>
   </div>
 
