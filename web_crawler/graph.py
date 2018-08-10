@@ -31,7 +31,10 @@ class build_graph():
         self.nodes[url].update(label)
 
     def add_edges(self, node, edge):
-        connection = { edge: {} }
+        if edge == '':
+            connection = {}
+        else:
+            connection = { edge: {} }
         if node not in self.edges:
             self.edges[node] = connection
         else:

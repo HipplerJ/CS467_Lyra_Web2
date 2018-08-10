@@ -72,52 +72,60 @@ def breadth_first_search(state, graph, url):
 """
 
 def depth_first_search(state, graph, url):
-    level = 0
-    map_nodes = []
-    map_edges = []
+    map = defaultdict(list)
+    order = []
     for x in range(state.depth):                                                # Loop through the search process for the search depth specified by the user
-        map_nodes.append(url)
         soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
         if soup:                                                                # If the page can be found (valid URL)
             node = get_title(url, soup)                                         # Collect the page Title
             edge_list = search_urls(soup, url)                                  # Collect All http and https URLs on the page
+            map[url].append(edge_list)
+            order.append(url)
             if edge_list:
-                level += 1
-                map_edges.append(edge_list)
                 graph.add_nodes(node, url, '#B0BEC5')                           # Add the node to arborjs with the color green
-                url = select_random_url(edge_list, map_nodes)
-                if x > 0:
-                    build_edge_connections(graph, map_nodes[level - 1], url)
             else:
                 graph.add_nodes("{} (No Links On Page)".format(node), url, '#FF7043')
-                if x > 0:
-                    build_edge_connections(graph, map_nodes[level - 1], url)
-                    url = select_random_url(map_edges[level], map_nodes)
-                    continue
-                else:                                                            # If this is the starting URL
-                    break                                                       # Break the cycle because there are no links to follow
-
         else:
             graph.add_nodes("{} (Invalid URL)".format(url), url, '#E53935')
-            if x == 0:                                                          # If this is the starting URL
-                break                                                           # Break the cycle because page cannot be loaded
-            else:
-                continue
+            if x == 0:
+                graph.add_edges(node, '')
+            break
 
-    print(map_nodes)
-    print(map_edges)
-    graph.package_graph()
-    send.write_json_file(graph.graph)
+        print(map)
+
+
+
+
+
+    #         if edge_list:
+    #             graph.add_nodes(node, url, '#B0BEC5')                           # Add the node to arborjs with the color green
+    #             map_visited[x].append(edge_list)
+    #             url = select_random_url(edge_list, map_nodes)
+    #             graph.add_edges(last, url)
+    #             level += 1
+    #         else:
+    #             graph.add_nodes("{} (No Links On Page)".format(node), url, '#FF7043')
+    #             map_edges.append([])
+    #             if x > 0:
+    #                 graph.add_edges(map_nodes[level - 1], url)
+    #                 url = select_random_url(map_edges[level], map_nodes)
+    #                 continue
+    #             else:                                                           # If this is the starting URL
+    #                 break                                                       # Break the cycle because there are no links to follow
+    #         level += 1
+    #
+    #     else:
+    #         graph.add_nodes("{} (Invalid URL)".format(url), url, '#E53935')
+    #         if x == 0:                                                          # If this is the starting URL
+    #             break                                                           # Break the cycle because page cannot be loaded
+    #         else:
+    #             continue
+    #
+    # print(map_nodes)
+    # print(map_edges)
+    # graph.package_graph()
+    # send.write_json_file(graph.graph)
     reset_graph(graph)                                                          # Ensures that the graph class objects are deleted once complete (Get weird errors if not)
-
-"""
-********************************************************************************
-* Description: build_connections function
-********************************************************************************
-"""
-
-def build_edge_connections(graph, node, connection):
-    graph.add_edges(node, connection)
 
 """
 ********************************************************************************
