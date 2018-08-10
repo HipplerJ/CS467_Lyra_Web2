@@ -72,26 +72,70 @@ def breadth_first_search(state, graph, url):
 """
 
 def depth_first_search(state, graph, url):
-    map = defaultdict(list)
-    order = []
-    for x in range(state.depth):                                                # Loop through the search process for the search depth specified by the user
-        soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
-        if soup:                                                                # If the page can be found (valid URL)
-            node = get_title(url, soup)                                         # Collect the page Title
-            edge_list = search_urls(soup, url)                                  # Collect All http and https URLs on the page
-            map[url].append(edge_list)
-            order.append(url)
-            if edge_list:
-                graph.add_nodes(node, url, '#B0BEC5')                           # Add the node to arborjs with the color green
-            else:
-                graph.add_nodes("{} (No Links On Page)".format(node), url, '#FF7043')
+    found = False                                                               # Establish a boolean variable to be used when looking for edges
+    map = defaultdict(list)                                                     # Create a default dict to track our connection through the web
+    visited = []
+    order = []                                                                  # Create a list to maintain the nodes in the order we reached them
+    edge = ''                                                                   # Create a blank edge incase traversal ends on first node
+    while len(visited) <= state.depth:                                          # Perform the crawl until we've reached the depth specified by the user
+        order.append(url)                                                       # Add the URL to the visited list so that we can track that we've been there
+        visited.append(url)
+        soup = get_page(url)                                                    # Graph URL HTML information and parse as BeautifulSoup Object
+        if soup:                                                                # If the url was valid and the page content could be stored
+            node_title = get_title(url, soup)                                   # Attempt to collect the title of the Web Page (if not found the Url is returned as the tite)
+            edge_list = search_urls(soup, url)                                  # Check for Links on the page (For Exception Handling, only HTTP and HTTPS Links are collected)
+            map[url].extend(edge_list)                                          # Add the URL Edges to the traversal map
+            if edge_list:                                                       # If the edge list had entries
+                graph.add_nodes(node_title, url, '#B0BEC5')                     # Add the node as a regular entry to Arbor.js
+                url = select_random_url(edge_list, map)
+            else:                                                               # If the edge list is empty and no links were found on the page
+                print("\n\n\nPAGE DOES NOT HAVE LINKS!!!!\n\n\n")
+                graph.add_nodes("{} (No Links On Page)".format(node_title),\
+                url, '#FF7043')                                                 # Add the node to Arbor.js graph with the color orange
+                while not found:
+                    if len(order) < 1:                                          # If this is the first node in in the traversal
+                        break                                                   # End the traversal.  There are no links to follow
+                    print(url)
+                    print(visited)
+                    location = order.index(url)
+                    order.remove(url)
+                    edge_list = map[order[location - 1]]
+                    print(edge_list)
+                    if not edge_list:
+                        continue
+                url = select_random_url(edge_list, map)
         else:
-            graph.add_nodes("{} (Invalid URL)".format(url), url, '#E53935')
-            if x == 0:
-                graph.add_edges(node, '')
-            break
+            print("\n\n\nPAGE COULD NOT BE LOADED!!!\n\n\n")
+            graph.add_nodes("{} (Invalid URL)".format(url), url, '#E53935')     # Add node to the Arbor.js graphj with the color red
+            order.remove(url)
+            if len(order) <= 1:                                                 # If this is the first node in the traversal
+                break                                                           # End the search because there's no way to continue
+    print(visited)
+    print(order)
+    graph.package_graph()
+    send.write_json_file(graph.graph)
+    reset_graph(graph)
+    # print(order)
+    # print(map)
 
-        print(map)
+    # for x in range(state.depth):                                                # Loop through the search process for the search depth specified by the user
+    #     soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
+    #     if soup:                                                                # If the page can be found (valid URL)
+    #         node = get_title(url, soup)                                         # Collect the page Title
+    #         edge_list = search_urls(soup, url)                                  # Collect All http and https URLs on the page
+    #         map[url].append(edge_list)
+    #         order.append(url)
+    #         if edge_list:
+    #             graph.add_nodes(node, url, '#B0BEC5')                           # Add the node to arborjs with the color green
+    #         else:
+    #             graph.add_nodes("{} (No Links On Page)".format(node), url, '#FF7043')
+    #     else:
+    #         graph.add_nodes("{} (Invalid URL)".format(url), url, '#E53935')
+    #         if x == 0:
+    #             graph.add_edges(node, '')
+    #         break
+    #
+    #     print(map)
 
 
 
@@ -125,7 +169,7 @@ def depth_first_search(state, graph, url):
     # print(map_edges)
     # graph.package_graph()
     # send.write_json_file(graph.graph)
-    reset_graph(graph)                                                          # Ensures that the graph class objects are deleted once complete (Get weird errors if not)
+    # reset_graph(graph)                                                          # Ensures that the graph class objects are deleted once complete (Get weird errors if not)
 
 """
 ********************************************************************************
@@ -201,10 +245,11 @@ def search_keyword(soup, keyword):
 ********************************************************************************
 """
 
-def select_random_url(url_list, nodes):
+def select_random_url(url_list, map):
+    print(url_list)
     random = choice(url_list)                                                   # Return a randomly selected URL from the list
-    if random in nodes:
-        select_random_url(url_list, nodes)
+    if random in map:
+        select_random_url(url_list, map)
     return random
 
 """
