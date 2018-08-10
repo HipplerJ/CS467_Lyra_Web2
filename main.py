@@ -122,7 +122,7 @@ def search():
             # Else if keyword is invalid, redirect back to search page and display keyword warning
             else:
                 # Set error message to be displayed on search form
-                keyword_error = "Invalid keyword submitted. Please enter a valid keyword (one word, alphabetic characters)"
+                keyword_error = "Invalid keyword submitted. Please enter a single word, letters only"
 
                 # Flash the error message to session cookie and redirect back to page
                 flash(keyword_error)
