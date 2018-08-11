@@ -29,7 +29,7 @@ from random import choice                                                       
 import requests                                                                 # Import the requests python library to make HTML requests and download data
 from bs4 import BeautifulSoup                                                   # Import the BeautifulSoup library to navigate through HTML with Python
 import re
-from collections import defaultdict
+import traversed as t
 
 """
 ********************************************************************************
@@ -42,10 +42,11 @@ from collections import defaultdict
 
 def start_search(state):
     graph = g.build_graph()                                                     # Create an instance of the graph class
+    travel = t.Traversed()
     if state.breadth_search:                                                    # If Breadth First Search was Specified
-        breadth_first_search(state, graph, state.starting_url)                  # Initiate Breadth First Search
+        breadth_first_search(state, graph, travel, state.starting_url)          # Initiate Breadth First Search
     if state.depth_search:                                                      # If Depth First Search was Specified
-        depth_first_search(state, graph, state.starting_url)                    # Initiate Depth First Search
+        depth_first_search(state, graph, travel, state.starting_url)            # Initiate Depth First Search
 
 """
 ********************************************************************************
@@ -71,47 +72,34 @@ def breadth_first_search(state, graph, url):
 ********************************************************************************
 """
 
-def depth_first_search(state, graph, url):
+def depth_first_search(state, graph, travel, url):
     found = False                                                               # Establish a boolean variable to be used when looking for edges
-    map = defaultdict(list)                                                     # Create a default dict to track our connection through the web
-    visited = []
-    order = []                                                                  # Create a list to maintain the nodes in the order we reached them
     edge = ''                                                                   # Create a blank edge incase traversal ends on first node
-    while len(visited) <= state.depth:                                          # Perform the crawl until we've reached the depth specified by the user
-        order.append(url)                                                       # Add the URL to the visited list so that we can track that we've been there
-        visited.append(url)
+    while len(travel.visited) <= state.depth:                                   # Perform the crawl until we've reached the depth specified by the user
+        travel.push(url)                                                        # Add the URL to the visited list so that we can track that we've been there
+        travel.visited.append(url)
         soup = get_page(url)                                                    # Graph URL HTML information and parse as BeautifulSoup Object
         if soup:                                                                # If the url was valid and the page content could be stored
             node_title = get_title(url, soup)                                   # Attempt to collect the title of the Web Page (if not found the Url is returned as the tite)
             edge_list = search_urls(soup, url)                                  # Check for Links on the page (For Exception Handling, only HTTP and HTTPS Links are collected)
-            map[url].extend(edge_list)                                          # Add the URL Edges to the traversal map
+            travel.map[url].extend(edge_list)                                   # Add the URL Edges to the traversal map
             if edge_list:                                                       # If the edge list had entries
                 graph.add_nodes(node_title, url, '#B0BEC5')                     # Add the node as a regular entry to Arbor.js
-                url = select_random_url(edge_list, map)
+                url = select_random_url(edge_list, travel.visited)              # Select a new url at random from the list of links on the page
             else:                                                               # If the edge list is empty and no links were found on the page
-                print("\n\n\nPAGE DOES NOT HAVE LINKS!!!!\n\n\n")
                 graph.add_nodes("{} (No Links On Page)".format(node_title),\
                 url, '#FF7043')                                                 # Add the node to Arbor.js graph with the color orange
-                while not found:
-                    if len(order) < 1:                                          # If this is the first node in in the traversal
+                while not edge_list:
+                    prev_url = travel.pop()
+                    if travel.size == 0:                                        # If this is the first node in in the traversal
                         break                                                   # End the traversal.  There are no links to follow
-                    print(url)
-                    print(visited)
-                    location = order.index(url)
-                    order.remove(url)
-                    edge_list = map[order[location - 1]]
-                    print(edge_list)
-                    if not edge_list:
-                        continue
-                url = select_random_url(edge_list, map)
+                    edge_list = travel.map[travel.peek()]
+                url = select_random_url(edge_list, travel.visited)
         else:
-            print("\n\n\nPAGE COULD NOT BE LOADED!!!\n\n\n")
             graph.add_nodes("{} (Invalid URL)".format(url), url, '#E53935')     # Add node to the Arbor.js graphj with the color red
             order.remove(url)
             if len(order) <= 1:                                                 # If this is the first node in the traversal
                 break                                                           # End the search because there's no way to continue
-    print(visited)
-    print(order)
     graph.package_graph()
     send.write_json_file(graph.graph)
     reset_graph(graph)
@@ -245,11 +233,13 @@ def search_keyword(soup, keyword):
 ********************************************************************************
 """
 
-def select_random_url(url_list, map):
+def select_random_url(url_list, visited):
+    found = False
     print(url_list)
-    random = choice(url_list)                                                   # Return a randomly selected URL from the list
-    if random in map:
-        select_random_url(url_list, map)
+    while not found:
+        random = choice(url_list)
+        if random not in visited:
+            found = True
     return random
 
 """
