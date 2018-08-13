@@ -18,6 +18,7 @@ bfs.click(function(){
 
 // else set max depth to 100 and set help text
 dfs.click(function(){
-  depthHelpMessage.text("Max depth for depth first traversal is 100 steps");
-  depthInput.attr("max", 100);
+  depthHelpMessage.text("Max depth for depth first traversal is 15 steps");
+  depthInput.attr("max", 15);
+  depthInput.attr("size", 3);
 });
