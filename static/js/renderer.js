@@ -1,5 +1,4 @@
 (function(){
-  
   Renderer = function(canvas){
     var canvas = $(canvas).get(0)
     var ctx = canvas.getContext("2d");
@@ -9,7 +8,7 @@
     var that = {
       init:function(system){
         particleSystem = system
-        particleSystem.screenSize(canvas.width, canvas.height) 
+        particleSystem.screenSize(canvas.width, canvas.height)
         particleSystem.screenPadding(40)
 
         that.initMouseHandling()
@@ -26,7 +25,7 @@
           // node: {mass:#, p:{x,y}, name:"", data:{}}
           // pt:   {x:#, y:#}  node position in screen coords
 
-          // determine the box size and round off the coords if we'll be 
+          // determine the box size and round off the coords if we'll be
           // drawing a text label (awful alignment jitter otherwise...)
           var label = node.data.label||""
           var w = ctx.measureText(""+label).width + 10
@@ -59,7 +58,7 @@
             ctx.fillText(label||"", pt.x, pt.y+4)
             ctx.fillText(label||"", pt.x, pt.y+4)
           }
-        })    			
+        })
 
 
         // draw the edges
@@ -77,7 +76,7 @@
           var tail = intersect_line_box(pt1, pt2, nodeBoxes[edge.source.name])
           var head = intersect_line_box(tail, pt2, nodeBoxes[edge.target.name])
 
-          ctx.save() 
+          ctx.save()
             ctx.beginPath()
             ctx.lineWidth = (!isNaN(weight)) ? parseFloat(weight) : 1
             ctx.strokeStyle = (color) ? color : "#cccccc"
@@ -127,12 +126,47 @@
         // set up a handler object that will initially listen for mousedowns then
         // for moves and mouseups while dragging
         var handler = {
+          // listener for move - show title of nearest node within 50px
+          // moved:function(e){
+          //   var pos = $(canvas).offset();
+          //   _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
+          //   nearest = sys.nearest(_mouseP);
+          //
+          //   if (nearest.node !== null){
+          //     nearest.node.data.color = "blue";
+          //     nearest.node.data.label = nearest.node.data.url;
+          //   }
+          // },
+
+
+
           clicked:function(e){
             var pos = $(canvas).offset();
             _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
             selected = nearest = dragged = particleSystem.nearest(_mouseP);
 
-            if (dragged.node !== null) dragged.node.fixed = true
+            // FIXME my own edits - this should all be under a hover handler
+            // IT WORKS
+            // if (dragged.node !== null) dragged.node.fixed = true
+            if (selected.node !== null){
+            // if (selected.node !== null && selected.distance < 100){
+              // selected.node.fixed = true
+              // Go to url
+              var url = selected.node.data.url;
+
+              console.log("distance from node: " + selected.node.data.url + " is " + selected.distance);
+
+
+              // console.log("going to url: " + selected.node.data.url)
+              // https://stackoverflow.com/questions/19851782/how-to-open-a-url-in-a-new-tab-using-javascript-or-jquery
+              var win = window.open(url, '_blank');
+              if (win) {
+                win.focus();
+              }
+
+
+              // $(that).trigger({type:"navigate", path:url})
+            }
 
             $(canvas).bind('mousemove', handler.dragged)
             $(window).bind('mouseup', handler.dropped)
@@ -202,6 +236,6 @@
     }
 
     return that
-  }    
-  
+  }
+
 })()

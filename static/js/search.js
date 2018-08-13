@@ -11,14 +11,14 @@ var depthInput = $('#depth');
 // https://api.jquery.com/change/
 bfs.click(function(){
   // if bfs checked, set max depth to 3 and say that in help text
-  depthHelpMessage.text("Max depth for breadth first traversal is 3 steps");
+  depthHelpMessage.text("Maximum depth for breadth first traversal is 3 steps");
   depthInput.attr("max", 3);
 });
 
 
 // else set max depth to 100 and set help text
 dfs.click(function(){
-  depthHelpMessage.text("Max depth for depth first traversal is 15 steps");
+  depthHelpMessage.text("Maximum depth for depth first traversal is 15 steps");
   depthInput.attr("max", 15);
   depthInput.attr("size", 3);
 });
