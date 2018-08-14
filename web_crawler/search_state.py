@@ -91,8 +91,8 @@ class search_state():
             self.depth = 1
         elif self.breadth_search and int(dep_lim) > 3:
             self.depth = 3
-        elif self.depth_search and int(dep_lim) > 100:
-            self.depth = 100
+        elif self.depth_search and int(dep_lim) > 15:
+            self.depth = 15
         else:
             self.depth = int(dep_lim)                                           # Set the search to the limit from the form (as an integer)
 

@@ -77,8 +77,11 @@ def depth_first_search(state, graph, travel, url):
     edge = ''                                                                   # Create a blank edge incase traversal ends on first node
     while len(travel.visited) <= state.depth:                                   # Perform the crawl until we've reached the depth specified by the user
         travel.push(url)                                                        # Add the URL to the visited list so that we can track that we've been there
-        travel.visited.append(url)
+        travel.visited.append(url)                                              # Add the node to the list of visited websites so that we don't return
         soup = get_page(url)                                                    # Graph URL HTML information and parse as BeautifulSoup Object
+
+        print("THIS IS SOUP: {}".format(soup))
+
         if soup:                                                                # If the url was valid and the page content could be stored
             node_title = get_title(url, soup)                                   # Attempt to collect the title of the Web Page (if not found the Url is returned as the tite)
             edge_list = search_urls(soup, url)                                  # Check for Links on the page (For Exception Handling, only HTTP and HTTPS Links are collected)
@@ -86,6 +89,7 @@ def depth_first_search(state, graph, travel, url):
             if edge_list:                                                       # If the edge list had entries
                 graph.add_nodes(node_title, url, '#B0BEC5')                     # Add the node as a regular entry to Arbor.js
                 url = select_random_url(edge_list, travel.visited)              # Select a new url at random from the list of links on the page
+                graph.add_edges(travel.visited[len(travel.visited) - 1], url)
             else:                                                               # If the edge list is empty and no links were found on the page
                 graph.add_nodes("{} (No Links On Page)".format(node_title),\
                 url, '#FF7043')                                                 # Add the node to Arbor.js graph with the color orange
@@ -99,6 +103,7 @@ def depth_first_search(state, graph, travel, url):
             graph.add_nodes("{} (Invalid URL)".format(url), url, '#E53935')     # Add node to the Arbor.js graphj with the color red
             order.remove(url)
             if len(order) <= 1:                                                 # If this is the first node in the traversal
+                graph.add_edges(node, '')
                 break                                                           # End the search because there's no way to continue
     graph.package_graph()
     send.write_json_file(graph.graph)
