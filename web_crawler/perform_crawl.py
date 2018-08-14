@@ -91,10 +91,11 @@ def depth_first_search(state, graph, travel, url):
                 graph.add_nodes("{} (No Links On Page)".format(node_title),\
                 url, '#FF7043')                                                 # Add the node to Arbor.js graph with the color orange
                 while not edge_list:
-                    prev_url = travel.pop()
-                    if travel.size == 0:                                        # If this is the first node in in the traversal
+                    if travel.size <= 1:                                        # If this is the first node in in the traversal
                         break                                                   # End the traversal.  There are no links to follow
-                    edge_list = travel.map[travel.peek()]
+                    else:
+                        prev_url = travel.pop()
+                        edge_list = travel.map[travel.peek()]
                 url = select_random_url(edge_list, travel.visited)
         else:
             graph.add_nodes("{} (Invalid URL)".format(url), url, '#E53935')     # Add node to the Arbor.js graphj with the color red
@@ -105,8 +106,8 @@ def depth_first_search(state, graph, travel, url):
     graph.package_graph()
     send.write_json_file(graph.graph)
     reset_graph(graph)
-    # print(order)
-    # print(map)
+    print(travel.nodes)
+    print(travel.visited)
 
     # for x in range(state.depth):                                                # Loop through the search process for the search depth specified by the user
     #     soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
