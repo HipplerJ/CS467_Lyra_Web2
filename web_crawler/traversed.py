@@ -2,18 +2,18 @@ from collections import defaultdict
 
 class Traversed:
      def __init__(self):
-         self.items = []
+         self.nodes = []
          self.visited = []
          self.map = defaultdict(list)
 
      def push(self, item):
-         self.items.append(item)
+         self.nodes.append(item)
 
      def pop(self):
-         return self.items.pop()
+         return self.nodes.pop()
 
      def peek(self):
-         return self.items[len(self.items)-1]
+         return self.nodes[len(self.nodes) - 1]
 
      def size(self):
-         return len(self.items)
+         return len(self.nodes)
