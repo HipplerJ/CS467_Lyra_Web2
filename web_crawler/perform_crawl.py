@@ -99,7 +99,7 @@ def depth_first_search(state, graph, travel, url):
         else:
             graph.add_nodes("{} (Invalid URL)".format(url), url, '#E53935')     # Add node to the Arbor.js graphj with the color red
             prev_url = travel.pop()
-            if len(order) <= 1:                                                 # If this is the first node in the traversal
+            if travel.size == 0:                                                # If this is the first node in the traversal
                 graph.add_edges(node, '')
                 break                                                           # End the search because there's no way to continue
     graph.package_graph()
