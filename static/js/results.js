@@ -28,10 +28,11 @@ $.getJSON('/static/json/crawler_results/results.json?' + new Date().getTime(), f
   //   value.label=key
   // })
   $.each(nodes, function(key, value){
-    // value.color="red"
+    value.color="red"
     // value.shape="rectangle"
-    value.shape=null
+    // value.shape="dot"
     value.label=key
+    value.title=key
   })
 
   // FIXME trace: display json file data in page

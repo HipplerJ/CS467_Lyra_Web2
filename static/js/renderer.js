@@ -132,10 +132,21 @@
           //   _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
           //   nearest = sys.nearest(_mouseP);
           //
-          //   if (nearest.node !== null){
-          //     nearest.node.data.color = "blue";
-          //     nearest.node.data.label = nearest.node.data.url;
+          //   console.log("nearest node is: " + nearest.node.data.url)
+          //   //
+          //   //
+          //   // console.log("nearest node: " + nearest.node.data.label)
+          //
+          //   if (!nearest.node){
+          //     console.log("no nearest node");
+          //     return false;
           //   }
+          //
+          //
+          //   // https://stackoverflow.com/questions/14286257/arbor-js-queries
+          //   // selected = (nearest.distance < nearest.node.data.radius) ? nearest : null
+          //   // TODO Display the url
+          //   $('#url_display').text(nearest.data.url)
           // },
 
 
@@ -145,27 +156,19 @@
             _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
             selected = nearest = dragged = particleSystem.nearest(_mouseP);
 
-            // FIXME my own edits - this should all be under a hover handler
-            // IT WORKS
-            // if (dragged.node !== null) dragged.node.fixed = true
             if (selected.node !== null){
-            // if (selected.node !== null && selected.distance < 100){
-              // selected.node.fixed = true
-              // Go to url
+              // Get url
               var url = selected.node.data.url;
 
-              console.log("distance from node: " + selected.node.data.url + " is " + selected.distance);
-
-
               // console.log("going to url: " + selected.node.data.url)
+              // console.log("distance from node: " + selected.node.data.url + " is " + selected.distance);
+              // $('#url_display').text(url)
+
               // https://stackoverflow.com/questions/19851782/how-to-open-a-url-in-a-new-tab-using-javascript-or-jquery
               var win = window.open(url, '_blank');
               if (win) {
                 win.focus();
               }
-
-
-              // $(that).trigger({type:"navigate", path:url})
             }
 
             $(canvas).bind('mousemove', handler.dragged)
