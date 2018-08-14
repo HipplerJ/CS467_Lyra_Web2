@@ -86,28 +86,27 @@ def depth_first_search(state, graph, travel, url):
             if edge_list:                                                       # If the edge list had entries
                 graph.add_nodes(node_title, url, '#B0BEC5')                     # Add the node as a regular entry to Arbor.js
                 url = select_random_url(edge_list, travel.visited)              # Select a new url at random from the list of links on the page
-                graph.add_edges(travel.visited[len(travel.visited) - 1], url)
+                graph.add_edges(travel.peek(), url)                             # Add a connection between the current node
             else:                                                               # If the edge list is empty and no links were found on the page
-                graph.add_nodes("{} (No Links On Page)".format(node_title),\
-                url, '#FF7043')                                                 # Add the node to Arbor.js graph with the color orange
+                print("\n\n\nNO FUCKING EDGES FOUND\n\n\n")
+                graph.add_nodes("{} (No Links On Page)".format(node_title), url, '#FF7043') # Add the node to Arbor.js graph with the color orange
                 while not edge_list:
-                    if travel.size <= 1:                                        # If this is the first node in in the traversal
+                    if travel.size() <= 1:                                      # If this is the first node in the traversal
                         break                                                   # End the traversal.  There are no links to follow
-                    else:
+                    else:                                                       # If there are more than one node in the traversal
                         prev_url = travel.pop()
                         edge_list = travel.map[travel.peek()]
                 url = select_random_url(edge_list, travel.visited)
+                graph.add_edges(travel.peek(), url)                             # Add a connection between the current node
         else:
             graph.add_nodes("{} (Invalid URL)".format(url), url, '#E53935')     # Add node to the Arbor.js graphj with the color red
             prev_url = travel.pop()
-            if travel.size == 0:                                                # If this is the first node in the traversal
+            if travel.size() <= 1:                                                # If this is the first node in the traversal
                 graph.add_edges(node, '')
                 break                                                           # End the search because there's no way to continue
-    graph.package_graph()
-    send.write_json_file(graph.graph)
-    reset_graph(graph)
-    print(travel.nodes)
-    print(travel.visited)
+    send_payload(graph)
+    # print(travel.nodes)
+    # print(travel.visited)
 
     # for x in range(state.depth):                                                # Loop through the search process for the search depth specified by the user
     #     soup = get_page(url)                                                    # Collect HTML from Page and Parse into BeautifulSoup Object
@@ -238,12 +237,22 @@ def search_keyword(soup, keyword):
 
 def select_random_url(url_list, visited):
     found = False
-    print(url_list)
     while not found:
         random = choice(url_list)
         if random not in visited:
             found = True
     return random
+
+"""
+********************************************************************************
+* Description: send_payload function
+********************************************************************************
+"""
+
+def send_payload(graph):
+    graph.package_graph()
+    send.write_json_file(graph.graph)
+    reset_graph(graph)
 
 """
 ********************************************************************************
