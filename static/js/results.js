@@ -1,5 +1,5 @@
 // Set up arbor.js particle system and renderer
-var sys = arbor.ParticleSystem(1000, 400,1);
+var sys = arbor.ParticleSystem(100000, 400,1);
 sys.parameters({gravity:true});
 sys.renderer = Renderer("#viewport") ;
 
@@ -31,7 +31,7 @@ $.getJSON('/static/json/crawler_results/results.json?' + new Date().getTime(), f
     value.color="red"
     // value.shape="rectangle"
     // value.shape="dot"
-    value.label=key
+    // value.label=key
     value.title=key
   })
 
