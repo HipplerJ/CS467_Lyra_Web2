@@ -127,42 +127,45 @@
         // for moves and mouseups while dragging
         var handler = {
           // listener for move - show title of nearest node within 50px
-          // moved:function(e){
-          //   var pos = $(canvas).offset();
-          //   _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
-          //   nearest = sys.nearest(_mouseP);
-          //
-          //   console.log("nearest node is: " + nearest.node.data.url)
-          //   //
-          //   //
-          //   // console.log("nearest node: " + nearest.node.data.label)
-          //
-          //   if (!nearest.node){
-          //     console.log("no nearest node");
-          //     return false;
-          //   }
-          //
-          //
-          //   // https://stackoverflow.com/questions/14286257/arbor-js-queries
-          //   // selected = (nearest.distance < nearest.node.data.radius) ? nearest : null
-          //   // TODO Display the url
-          //   $('#url_display').text(nearest.data.url)
-          // },
+          moved:function(e){
+            var pos = $(canvas).offset();
+            _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
+            nearest = sys.nearest(_mouseP);
 
+            // https://stackoverflow.com/questions/14286257/arbor-js-queries
+            if (nearest.node !== null){
+              console.log("nearest node is: " + nearest.node.data.url +
+                            " at a distance of " + nearest.distance)
 
+              // distance requirement
+              // if (nearest.distance < 120){
+                // Mark the displayed node by changing its color and shape, displaying its label
+                nearest.node.data.label = nearest.node.data.url;
+                nearest.node.data.color = "orange";
+                nearest.node.data.shape = "rectangle";
+
+                // Set all other nodes to default
+                // Revert previous nodes label, color, and shape back to what it was
+                particleSystem.eachNode(function(node){
+                  if (node.data.url !== nearest.node.data.url){
+                    node.data.color = "silver";
+                    node.data.shape = "dot";
+                    node.data.label = null;
+                  }
+                })
+              // }
+            }
+            return false;
+          },
 
           clicked:function(e){
             var pos = $(canvas).offset();
             _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
             selected = nearest = dragged = particleSystem.nearest(_mouseP);
 
-            if (selected.node !== null){
+            if (selected.node !== null /* TODO add distance*/){
               // Get url
               var url = selected.node.data.url;
-
-              // console.log("going to url: " + selected.node.data.url)
-              // console.log("distance from node: " + selected.node.data.url + " is " + selected.distance);
-              // $('#url_display').text(url)
 
               // https://stackoverflow.com/questions/19851782/how-to-open-a-url-in-a-new-tab-using-javascript-or-jquery
               var win = window.open(url, '_blank');
@@ -203,6 +206,7 @@
           }
         }
         $(canvas).mousedown(handler.clicked);
+        $(canvas).mousemove(handler.moved);
 
       }
 
