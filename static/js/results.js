@@ -7,15 +7,15 @@ sys.renderer = Renderer("#viewport") ;
 var test_data = $('#testdata');  // draw/test after this element
 var canvas = $('canvas');  // html canvas element
 
-// Resize canvas to window size
-canvas.width('100%');
-canvas.height('auto');
-
-// Listen for window resizing - resize canvas to window size
-$(window).resize(function(){
-  canvas.width('100%');
-  canvas.height('auto');
-})
+// // Resize canvas to window size
+// canvas.width('100%');
+// canvas.height('auto');
+//
+// // Listen for window resizing - resize canvas to window size
+// $(window).resize(function(){
+//   canvas.width('100%');
+//   canvas.height('auto');
+// })
 
 
 // test: open dummy json file with .getJSON and display contents using $.getJSON

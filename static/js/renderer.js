@@ -11,6 +11,10 @@
         particleSystem.screenSize(canvas.width, canvas.height)
         particleSystem.screenPadding(40)
 
+        // Internalize canvas resize to here
+        $(window).resize(that.resize)
+        that.resize()
+
         that.initMouseHandling()
       },
 
@@ -112,10 +116,19 @@
             ctx.restore()
           }
         })
-
-
-
       },
+
+
+      // Resize within renderer for more precise hovering (previously within results.js)
+      resize:function(){
+        var w = $(window).width(),
+            h = $(window).height();
+        canvas.width = w; canvas.height = h // resize the canvas element to fill the screen
+        particleSystem.screenSize(w,h) // inform the system so it can map coords for us
+        that.redraw()
+      },
+
+
       initMouseHandling:function(){
         // no-nonsense drag and drop (thanks springy.js)
         selected = null;
@@ -137,9 +150,7 @@
               console.log("nearest node is: " + nearest.node.data.url +
                             " at a distance of " + nearest.distance)
 
-              // distance requirement
-              // if (nearest.distance < 120){
-                // Mark the displayed node by changing its color and shape, displaying its label
+              // Mark the displayed node by changing its color and shape, displaying its label
                 nearest.node.data.label = nearest.node.data.url;
                 nearest.node.data.color = "orange";
                 nearest.node.data.shape = "rectangle";
@@ -153,7 +164,6 @@
                     node.data.label = null;
                   }
                 })
-              // }
             }
             return false;
           },

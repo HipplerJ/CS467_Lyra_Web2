@@ -1,5 +1,8 @@
 {% extends 'layout.html' %}
 {% block body %}
+<div class="container">
+
+
 
   <!-- Load validate.js script into memory -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.12.0/validate.min.js"></script>
@@ -95,5 +98,5 @@
   <!-- search.js script -->
   <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/search.js') }}"></script>
 
-
+</div>
 {% endblock %}
