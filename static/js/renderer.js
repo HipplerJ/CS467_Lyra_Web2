@@ -1,3 +1,6 @@
+// TODO give credit - template from arbor js, edited by Team Lyra
+
+
 (function(){
   Renderer = function(canvas){
     var canvas = $(canvas).get(0)
@@ -16,6 +19,13 @@
         that.resize()
 
         that.initMouseHandling()
+
+        // Remove empty node that keeps showing up
+        // particleSystem.eachNode(function(node){
+        //   if (node.data.url == null){
+        //     pruneNode(node)
+        //   }
+        // })
       },
 
       redraw:function(){
@@ -147,8 +157,8 @@
 
             // https://stackoverflow.com/questions/14286257/arbor-js-queries
             if (nearest.node !== null){
-              console.log("nearest node is: " + nearest.node.data.url +
-                            " at a distance of " + nearest.distance)
+              // console.log("nearest node is: " + nearest.node.data.url +
+              //               " at a distance of " + nearest.distance)
 
               // Mark the displayed node by changing its color and shape, displaying its label
                 nearest.node.data.label = nearest.node.data.url;
@@ -173,16 +183,16 @@
             _mouseP = arbor.Point(e.pageX-pos.left, e.pageY-pos.top)
             selected = nearest = dragged = particleSystem.nearest(_mouseP);
 
-            if (selected.node !== null /* TODO add distance*/){
-              // Get url
-              var url = selected.node.data.url;
-
-              // https://stackoverflow.com/questions/19851782/how-to-open-a-url-in-a-new-tab-using-javascript-or-jquery
-              var win = window.open(url, '_blank');
-              if (win) {
-                win.focus();
-              }
-            }
+            // if (selected.node !== null /* TODO add distance*/){
+            //   // Get url
+            //   var url = selected.node.data.url;
+            //
+            //   // https://stackoverflow.com/questions/19851782/how-to-open-a-url-in-a-new-tab-using-javascript-or-jquery
+            // var win = window.open(url, '_blank');
+            // if (win) {
+            //   win.focus();
+            // }
+            // }
 
             $(canvas).bind('mousemove', handler.dragged)
             $(window).bind('mouseup', handler.dropped)
@@ -205,7 +215,17 @@
 
           dropped:function(e){
             if (dragged===null || dragged.node===undefined) return
-            if (dragged.node !== null) dragged.node.fixed = false
+            if (dragged.node !== null)
+            {
+              dragged.node.fixed = false
+              var url = dragged.node.data.url
+
+              https://stackoverflow.com/questions/19851782/how-to-open-a-url-in-a-new-tab-using-javascript-or-jquery
+              var win = window.open(url, '_blank');
+              if (win) {
+                win.focus();
+              }
+            }
             dragged.node.tempMass = 50
             dragged = null
             selected = null
