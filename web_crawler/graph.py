@@ -23,14 +23,18 @@ class build_graph():
         self.edges = {}
         self.graph = {}
 
-    def add_nodes(self, node, url, color):
+    def add_nodes(self, node, url, color, key_word_found, key_word):
         color = { 'color': color }
         label = { 'label': node }
         title = { 'title': node }
+        keyword_found = { 'keyword_found': key_word_found}
+        keyword = { 'keyword': key_word}
         self.nodes[url] = { 'url': url }
         self.nodes[url].update(color)
         self.nodes[url].update(label)
         self.nodes[url].update(title)
+        self.nodes[url].update(keyword_found)
+        self.nodes[url].update(keyword)
 
     def add_edges(self, node, edge):
         if edge == '':

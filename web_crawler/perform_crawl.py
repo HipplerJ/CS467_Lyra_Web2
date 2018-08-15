@@ -86,7 +86,6 @@ def breadth_first_search(state, graph, travel, url):
         print("\nNEXT LEVEL:\n{}\n".format(next_level))
         depth += 1
     send_payload(graph)
-# [google.com]
 
 """
 ********************************************************************************
@@ -103,11 +102,18 @@ def depth_first_search(state, graph, travel, url):
         soup = visit_page_depth(travel, url)
         if soup:                                                                # If the url was valid and the page content could be stored
             title, edge_list = get_page_details(travel, url, soup)
+            if state.keyword_used:
+                search_keyword(state, soup, state.keyword)
+                print("KEYWORD USED: {}".format(state.keyword))
+                if state.keyword_found:
+                    print("KEYWORD FOUND!")
+                    keyword_node(graph, title, url, state)
+                    break
             if edge_list:                                                       # If the edge list had entries
-                good_node(graph, title, url)                                    # Add the node as a regular entry to Arbor.js
+                good_node(graph, title, url, state)                             # Add the node as a regular entry to Arbor.js
                 url = get_next_node(travel, graph, url)
             else:                                                               # If the edge list is empty and no links were found on the page
-                no_links_node(graph, title, url)                                # Add the node to Arbor.js graph with the color orange
+                no_links_node(graph, title, url, state)                         # Add the node to Arbor.js graph with the color orange
                 if travel.size() == 1:
                     graph.add_edges(travel.peek(), '')
                     break
@@ -115,7 +121,7 @@ def depth_first_search(state, graph, travel, url):
                 graph.add_edges(travel.peek(), prev_url)
                 url = get_next_node(travel, graph, url)
         else:
-            invalid_url(graph, url)
+            invalid_url(graph, url, state)
             if travel.size() == 1:
                 graph.add_edges(travel.peek(), '')
                 break
@@ -195,25 +201,11 @@ def search_urls(soup, urls):                                                    
 ********************************************************************************
 """
 
-def search_keyword(soup, keyword):
-    results = soup.body.find_all(string=re.compile('.*{0}.*'.format(keyword)), recursive=True)
-    print('Found the word "{0}" {1} times\n'.format(keyword, len(results)))
-
-    for content in results:
-        words = content.split()
-        for index, word in enumerate(words):
-            # If the content contains the search word twice or more this will fire for each occurence
-            if word == keyword:
-                print('Whole content: "{0}"'.format(content))
-                before = None
-                after = None
-                # Check if it's a first word
-                if index != 0:
-                    before = words[index-1]
-                # Check if it's a last word
-                if index != len(words)-1:
-                    after = words[index+1]
-                print('\tWord before: "{0}", word after: "{1}"'.format(before, after))
+def search_keyword(state, soup, keyword):
+    if soup.body:
+        results = soup.body.find_all(string=re.compile('.*{0}.*'.format(keyword)), recursive=True)
+        if len(results) > 0:
+            state.keyword_found = True
 
 """
 ********************************************************************************
@@ -248,8 +240,17 @@ def get_next_node(travel, graph, url):
 ********************************************************************************
 """
 
-def good_node(graph, title, url):
-    build_nodes(graph, title, url, '#B0BEC5')
+def good_node(graph, title, url, state):
+    build_nodes(graph, title, url, '#B0BEC5', state)
+
+"""
+********************************************************************************
+* Description: keyword_node function
+********************************************************************************
+"""
+
+def keyword_node(graph, title, url, state):
+    build_nodes(graph, '{} - Keyword Found'.format(title), url, '#FFFF8D', state)
 
 """
 ********************************************************************************
@@ -257,8 +258,8 @@ def good_node(graph, title, url):
 ********************************************************************************
 """
 
-def no_links_node(graph, title, url):
-    build_nodes(graph, "{} (No Links On Page)".format(title), url, '#FF7043')
+def no_links_node(graph, title, url, state):
+    build_nodes(graph, "{} (No Links On Page)".format(title), url, '#FF7043', state)
 
 """
 ********************************************************************************
@@ -266,8 +267,8 @@ def no_links_node(graph, title, url):
 ********************************************************************************
 """
 
-def invalid_url(graph, url):
-    build_nodes(graph, "{} (Invalid URL)".format(url), url, '#E53935')
+def invalid_url(graph, url, state):
+    build_nodes(graph, "{} (Invalid URL)".format(url), url, '#E53935', state)
 
 """
 ********************************************************************************
@@ -275,8 +276,8 @@ def invalid_url(graph, url):
 ********************************************************************************
 """
 
-def build_nodes(graph, title, url, color):
-    graph.add_nodes(title, url, color)
+def build_nodes(graph, title, url, color, state):
+    graph.add_nodes(title, url, color, state.keyword_found, state.keyword)
 
 """
 ********************************************************************************
