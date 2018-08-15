@@ -29,7 +29,8 @@ from random import choice                                                       
 import requests                                                                 # Import the requests python library to make HTML requests and download data
 from bs4 import BeautifulSoup                                                   # Import the BeautifulSoup library to navigate through HTML with Python
 import re
-import traversed as t
+import depth_traversed as dt
+import breadth_traversed as bt
 
 """
 ********************************************************************************
@@ -42,11 +43,12 @@ import traversed as t
 
 def start_search(state):
     graph = g.build_graph()                                                     # Create an instance of the graph class
-    travel = t.Traversed()
+    dt_travel = dt.Stack()
+    bt_travel = bt.Queue()
     if state.breadth_search:                                                    # If Breadth First Search was Specified
-        breadth_first_search(state, graph, travel, state.starting_url)          # Initiate Breadth First Search
+        breadth_first_search(state, graph, bt_travel, state.starting_url)       # Initiate Breadth First Search
     if state.depth_search:                                                      # If Depth First Search was Specified
-        depth_first_search(state, graph, travel, state.starting_url)            # Initiate Depth First Search
+        depth_first_search(state, graph, dt_travel, state.starting_url)         # Initiate Depth First Search
 
 """
 ********************************************************************************
@@ -54,13 +56,33 @@ def start_search(state):
 ********************************************************************************
 """
 
-def breadth_first_search(state, graph, url):
-    graph = g.build_graph()                                                     # Create an instance of the graph class
-    for x in range(state.depth):
-        soup, url_list = search_urls(url)
-        for y in range(len(url_list)):
-            send.send_data_server(url, url_list, y)
-            url = url_list[y]
+def breadth_first_search(state, graph, travel, url):
+    depth = 0
+    while depth < state.depth:
+        soup = get_html(url)                                                    # Graph URL HTML information and parse as BeautifulSoup Object
+        if soup:
+            node_title = get_title(url, soup)
+            edge_list = search_urls(soup, url)
+            travel.map[url].extend(edge_list)
+        print("This is the list of URLs")
+        for x in range(len(travel.map[url])):
+            travel.enqueue(travel.map[url][x])
+        print(travel.items)
+        print(travel.map)
+        depth += 1
+    send_payload(graph)
+
+"""
+********************************************************************************
+* Description: get_page_details function
+********************************************************************************
+"""
+
+def get_page_details_breadth(travel, url, soup):
+    node_title = get_title(url, soup)                                           # Attempt to collect the title of the Web Page (if not found the Url is returned as the tite)
+    edge_list = search_urls(soup, url)                                          # Check for Links on the page (For Exception Handling, only HTTP and HTTPS Links are collected)
+    travel.map[url].extend(edge_list)                                           # Add the URL Edges to the traversal map
+    return node_title, edge_list
 
 """
 ********************************************************************************
@@ -73,47 +95,38 @@ def breadth_first_search(state, graph, url):
 """
 
 def depth_first_search(state, graph, travel, url):
-    found = False                                                               # Establish a boolean variable to be used when looking for edges
     while len(travel.visited) <= state.depth:                                   # Perform the crawl until we've reached the depth specified by the user
-        print("PLACES WE'VE BEEN")
-        print(travel.visited)
-        soup = visit_page(travel, url)
+        soup = visit_page_depth(travel, url)
         if soup:                                                                # If the url was valid and the page content could be stored
             title, edge_list = get_page_details(travel, url, soup)
             if edge_list:                                                       # If the edge list had entries
-                print("{} - GOOD TO GO".format(url))
-                good_node(graph, title, url)                                           # Add the node as a regular entry to Arbor.js
-                url = select_random_url(travel.map[travel.peek()], travel.visited)              # Select a new url at random from the list of links on the page
-                graph.add_edges(travel.peek(), url)                             # Add a connection between the current node
-            else:                                                       # If the edge list is empty and no links were found on the page
-                print("{} - NO LINKS".format(url))
-                no_links_node(graph, title, url) # Add the node to Arbor.js graph with the color orange
+                good_node(graph, title, url)                                    # Add the node as a regular entry to Arbor.js
+                url = get_next_node(travel, graph, url)
+            else:                                                               # If the edge list is empty and no links were found on the page
+                no_links_node(graph, title, url)                                # Add the node to Arbor.js graph with the color orange
                 if travel.size() == 1:
                     graph.add_edges(travel.peek(), '')
                     break
                 prev_url = travel.pop()
                 graph.add_edges(travel.peek(), prev_url)
-                url = select_random_url(travel.map[travel.peek()], travel.visited)
-                graph.add_edges(travel.peek(), url)                             # Add a connection between the current node
+                url = get_next_node(travel, graph, url)
         else:
-            print("{} - BAD LINK".format(url))
             invalid_url(graph, url)
             if travel.size() == 1:
                 graph.add_edges(travel.peek(), '')
                 break
             prev_url = travel.pop()
             graph.add_edges(travel.peek(), prev_url)
-            url = select_random_url(travel.map[travel.peek()], travel.visited)
-            graph.add_edges(travel.peek(), url)
+            url = get_next_node(travel, graph, url)
     send_payload(graph)
 
 """
 ********************************************************************************
-* Description: visit_page function
+* Description: visit_page_depth function
 ********************************************************************************
 """
 
-def visit_page(travel, url):
+def visit_page_depth(travel, url):
     travel.push(url)                                                            # Add the URL to the visited list so that we can track that we've been there
     travel.visited.append(url)                                                  # Add the node to the list of visited websites so that we don't return
     soup = get_html(url)                                                        # Graph URL HTML information and parse as BeautifulSoup Object
@@ -213,6 +226,17 @@ def select_random_url(url_list, visited):
         if random not in visited:
             found = True
     return random
+
+"""
+********************************************************************************
+* Description: get_next_node function
+********************************************************************************
+"""
+
+def get_next_node(travel, graph, url):
+    url = select_random_url(travel.map[travel.peek()], travel.visited)          # Select a new url at random from the list of links on the page
+    graph.add_edges(travel.peek(), url)
+    return url
 
 """
 ********************************************************************************
