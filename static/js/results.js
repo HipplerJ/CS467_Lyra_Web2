@@ -1,6 +1,7 @@
 // Set up arbor.js particle system and renderer
-var sys = arbor.ParticleSystem(100000, 400,1);
-sys.parameters({gravity:true});
+// var sys = arbor.ParticleSystem(1000, 400,1);
+var sys = arbor.ParticleSystem();
+sys.parameters({stiffness:900, repulsion:2000, gravity:true, dt:0.015});
 sys.renderer = Renderer("#viewport") ;
 
 // Variables
