@@ -57,32 +57,36 @@ def start_search(state):
 """
 
 def breadth_first_search(state, graph, travel, url):
+    current_level = [url]
+    next_level = []
     depth = 0
     while depth < state.depth:
-        soup = get_html(url)                                                    # Graph URL HTML information and parse as BeautifulSoup Object
-        if soup:
-            node_title = get_title(url, soup)
-            edge_list = search_urls(soup, url)
-            travel.map[url].extend(edge_list)
-        print("This is the list of URLs")
-        for x in range(len(travel.map[url])):
-            travel.enqueue(travel.map[url][x])
-        print(travel.items)
-        print(travel.map)
+        print("\nCURRENT LEVEL:\n{}\n".format(current_level))
+        for x in range(len(current_level)):
+            print("CURRENT URL: {}".format(current_level[x]))
+            soup = get_html(current_level[x])                                   # Graph URL HTML information and parse as BeautifulSoup Object
+            if soup:
+                title = get_title(current_level[x], soup)
+                edge_list = search_urls(soup, current_level[x])
+                if edge_list:
+                    good_node(graph, title, current_level[x])
+                    next_level.extend(edge_list)
+                    print("\nEDGE LIST:\n{}".format(edge_list))
+                    for y in range(len(edge_list)):
+                        graph.add_edges(current_level[x], edge_list[y])
+                else:
+                    print("NO LINK")
+                    no_links_node(graph, title, current_level[x])
+            else:
+                print("NO PAGE")
+                invalid_url(graph, current_level[x])
+        current_level = next_level
+        print("\nNEXT LEVEL:\n{}\n".format(next_level))
+        next_level = []
+        print("\nNEXT LEVEL:\n{}\n".format(next_level))
         depth += 1
     send_payload(graph)
-
-"""
-********************************************************************************
-* Description: get_page_details function
-********************************************************************************
-"""
-
-def get_page_details_breadth(travel, url, soup):
-    node_title = get_title(url, soup)                                           # Attempt to collect the title of the Web Page (if not found the Url is returned as the tite)
-    edge_list = search_urls(soup, url)                                          # Check for Links on the page (For Exception Handling, only HTTP and HTTPS Links are collected)
-    travel.map[url].extend(edge_list)                                           # Add the URL Edges to the traversal map
-    return node_title, edge_list
+# [google.com]
 
 """
 ********************************************************************************
