@@ -26,9 +26,11 @@ class build_graph():
     def add_nodes(self, node, url, color):
         color = { 'color': color }
         label = { 'label': node }
+        title = { 'title': node }
         self.nodes[url] = { 'url': url }
         self.nodes[url].update(color)
         self.nodes[url].update(label)
+        self.nodes[url].update(title)
 
     def add_edges(self, node, edge):
         if edge == '':
