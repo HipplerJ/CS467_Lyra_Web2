@@ -60,39 +60,32 @@ def breadth_first_search(state, graph, url):
     next_level = []
     depth = 0
     while depth < state.depth:
-        print("\nCURRENT LEVEL:\n{}\n".format(current_level))
         for x in range(len(current_level)):
-            print("CURRENT URL: {}".format(current_level[x]))
             soup = get_html(current_level[x])                                   # Graph URL HTML information and parse as BeautifulSoup Object
             if soup:
                 title = get_title(current_level[x], soup)
                 edge_list = search_urls(soup, current_level[x])
                 if state.keyword_used:
                     search_keyword(state, soup, state.keyword)
-                    print("KEYWORD USED: {}".format(state.keyword))
                     if state.keyword_found:
-                        print("KEYWORD FOUND!")
                         keyword_node(graph, title, url, state)
                         break
                 if edge_list:
                     good_node(graph, title, current_level[x], state)
                     next_level.extend(edge_list)
-                    print("\nEDGE LIST:\n{}".format(edge_list))
                     for y in range(len(edge_list)):
                         print("{} -> {}".format(current_level[x], edge_list[y]))
                         good_node(graph, edge_list[y], edge_list[y], state)
-                        graph.add_edges(current_level[x], edge_list[y])
-            #     else:
-            #         print("NO LINK")
-            #         no_links_node(graph, title, current_level[x], state)
-            # else:
-            #     print("NO PAGE")
-            #     invalid_url(graph, current_level[x])
-            #     graph.add_edges(current_level[x], edge_list[y])
+                        graph.add_edges(edge_list[y], current_level[x])
+                else:
+                    print("NO LINK")
+                    no_links_node(graph, title, current_level[x], state)
+            else:
+                print("NO PAGE")
+                invalid_url(graph, current_level[x])
+                graph.add_edges(current_level[x], edge_list[y])
         current_level = next_level
-        print("\nNEXT LEVEL:\n{}\n".format(next_level))
         next_level = []
-        print("\nNEXT LEVEL:\n{}\n".format(next_level))
         depth += 1
     print(map)
     send_payload(graph)
