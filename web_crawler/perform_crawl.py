@@ -30,7 +30,7 @@ import requests                                                                 
 from bs4 import BeautifulSoup                                                   # Import the BeautifulSoup library to navigate through HTML with Python
 import re
 import depth_traversed as dt
-import breadth_traversed as bt
+from collections import defaultdict
 
 """
 ********************************************************************************
@@ -44,9 +44,8 @@ import breadth_traversed as bt
 def start_search(state):
     graph = g.build_graph()                                                     # Create an instance of the graph class
     dt_travel = dt.Stack()
-    bt_travel = bt.Queue()
     if state.breadth_search:                                                    # If Breadth First Search was Specified
-        breadth_first_search(state, graph, bt_travel, state.starting_url)       # Initiate Breadth First Search
+        breadth_first_search(state, graph, state.starting_url)                  # Initiate Breadth First Search
     if state.depth_search:                                                      # If Depth First Search was Specified
         depth_first_search(state, graph, dt_travel, state.starting_url)         # Initiate Depth First Search
 
@@ -56,7 +55,7 @@ def start_search(state):
 ********************************************************************************
 """
 
-def breadth_first_search(state, graph, travel, url):
+def breadth_first_search(state, graph, url):
     current_level = [url]
     next_level = []
     depth = 0
@@ -68,23 +67,34 @@ def breadth_first_search(state, graph, travel, url):
             if soup:
                 title = get_title(current_level[x], soup)
                 edge_list = search_urls(soup, current_level[x])
+                if state.keyword_used:
+                    search_keyword(state, soup, state.keyword)
+                    print("KEYWORD USED: {}".format(state.keyword))
+                    if state.keyword_found:
+                        print("KEYWORD FOUND!")
+                        keyword_node(graph, title, url, state)
+                        break
                 if edge_list:
-                    good_node(graph, title, current_level[x])
+                    good_node(graph, title, current_level[x], state)
                     next_level.extend(edge_list)
                     print("\nEDGE LIST:\n{}".format(edge_list))
                     for y in range(len(edge_list)):
+                        print("{} -> {}".format(current_level[x], edge_list[y]))
+                        good_node(graph, edge_list[y], edge_list[y], state)
                         graph.add_edges(current_level[x], edge_list[y])
-                else:
-                    print("NO LINK")
-                    no_links_node(graph, title, current_level[x])
-            else:
-                print("NO PAGE")
-                invalid_url(graph, current_level[x])
+            #     else:
+            #         print("NO LINK")
+            #         no_links_node(graph, title, current_level[x], state)
+            # else:
+            #     print("NO PAGE")
+            #     invalid_url(graph, current_level[x])
+            #     graph.add_edges(current_level[x], edge_list[y])
         current_level = next_level
         print("\nNEXT LEVEL:\n{}\n".format(next_level))
         next_level = []
         print("\nNEXT LEVEL:\n{}\n".format(next_level))
         depth += 1
+    print(map)
     send_payload(graph)
 
 """
