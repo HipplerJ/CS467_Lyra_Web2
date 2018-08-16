@@ -29,21 +29,13 @@ class build_graph():
         title = { 'title': node }
         keyword_found = { 'keyword_found': key_word_found}
         keyword = { 'keyword': key_word}
-        if url not in self.nodes:
-            self.nodes[url] = { 'url': url }
-            self.nodes[url].update(color)
-            self.nodes[url].update(label)
-            self.nodes[url].update(title)
-            self.nodes[url].update(keyword_found)
-            self.nodes[url].update(keyword)
-        else:
-            self.nodes[url]['color'] = color
-            if url != node:
-                self.nodes[url]['label'] = node
-                self.nodes[url]['title'] = node
-            self.nodes[url]['keyword_found'] = keyword_found
-            self.nodes[url]['keyword'] = key_word
-            
+        self.nodes[url] = { 'url': url }
+        self.nodes[url].update(color)
+        self.nodes[url].update(label)
+        self.nodes[url].update(title)
+        self.nodes[url].update(keyword_found)
+        self.nodes[url].update(keyword)
+
     def add_edges(self, node, edge):
         if edge == '':
             connection = {}
