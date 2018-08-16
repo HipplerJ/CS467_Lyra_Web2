@@ -81,7 +81,6 @@ def breadth_first_search(state, graph, url):
                     no_links_node(graph, title, current_level[x], state)
             else:
                 invalid_url(graph, current_level[x])
-                graph.add_edges(current_level[x], edge_list[y])
         current_level = next_level
         next_level = []
         depth += 1
