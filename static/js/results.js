@@ -32,7 +32,7 @@ $.getJSON('/static/json/crawler_results/results.json?' + new Date().getTime(), f
     // value.label=key
 
     // print these so we can find the empty node
-    console.log("Node url: " + value.url)
+    // console.log("Node url: " + value.url)
   })
 
   // FIXME trace: display json file data in page

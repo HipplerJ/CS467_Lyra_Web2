@@ -162,7 +162,8 @@
               //               " at a distance of " + nearest.distance)
 
               // Mark the displayed node by changing its color and shape, displaying its label
-                nearest.node.data.label = nearest.node.data.url;
+                nearest.node.data.label = nearest.node.data.title;
+                console.log("node title: " + nearest.node.data.title)
                 nearest.node.data.color = "orange";
                 nearest.node.data.shape = "rectangle";
 
