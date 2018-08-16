@@ -74,7 +74,6 @@ def breadth_first_search(state, graph, url):
                     good_node(graph, title, current_level[x], state)
                     next_level.extend(edge_list)
                     for y in range(len(edge_list)):
-                        print("{} -> {}".format(current_level[x], edge_list[y]))
                         good_node(graph, edge_list[y], edge_list[y], state)
                         graph.add_edges(edge_list[y], current_level[x])
                 else:
@@ -85,7 +84,6 @@ def breadth_first_search(state, graph, url):
         current_level = next_level
         next_level = []
         depth += 1
-    print(map)
     send_payload(graph)
 
 """
@@ -105,9 +103,7 @@ def depth_first_search(state, graph, travel, url):
             title, edge_list = get_page_details(travel, url, soup)
             if state.keyword_used:
                 search_keyword(state, soup, state.keyword)
-                print("KEYWORD USED: {}".format(state.keyword))
                 if state.keyword_found:
-                    print("KEYWORD FOUND!")
                     keyword_node(graph, title, url, state)
                     break
             if edge_list:                                                       # If the edge list had entries

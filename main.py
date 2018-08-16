@@ -88,11 +88,11 @@ def search():
             # Validate keyword
             if keyword_validator(keyword):
 
-                # FIXME Trace statements (DELETE)
-                print("Starting url: %s" %url)
-                print("Method: %s" %method)
-                print("Depth: %s" %depth)
-                print("Keyword: %s" %keyword)
+                # # FIXME Trace statements (DELETE)
+                # print("Starting url: %s" %url)
+                # print("Method: %s" %method)
+                # print("Depth: %s" %depth)
+                # print("Keyword: %s" %keyword)
 
                 # Call crawler
                 # crawler_thread = threading.Thread(target=crawl.crawler, args=form.data)

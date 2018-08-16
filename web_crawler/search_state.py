@@ -65,7 +65,6 @@ class search_state():
         if not url.startswith("http"):
             url = 'http://{}'.format(url)
         self.starting_url = url
-        print(url)
 
     """
     ****************************************************************************
