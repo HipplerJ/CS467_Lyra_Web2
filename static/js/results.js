@@ -2,6 +2,7 @@
 // var sys = arbor.ParticleSystem(1000, 400,1);
 var sys = arbor.ParticleSystem();
 sys.parameters({stiffness:900, repulsion:2000, gravity:true, dt:0.015});
+// sys.parameters({stiffness:400, repulsion:100000, gravity:true, dt:0.015});
 sys.renderer = Renderer("#viewport") ;
 
 // Variables

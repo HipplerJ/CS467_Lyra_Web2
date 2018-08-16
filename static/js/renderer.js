@@ -12,7 +12,7 @@
       init:function(system){
         particleSystem = system
         particleSystem.screenSize(canvas.width, canvas.height)
-        particleSystem.screenPadding(40)
+        particleSystem.screenPadding(80)
 
         // Internalize canvas resize to here
         $(window).resize(that.resize)
@@ -135,6 +135,7 @@
             h = $(window).height();
         canvas.width = w; canvas.height = h // resize the canvas element to fill the screen
         particleSystem.screenSize(w,h) // inform the system so it can map coords for us
+        particleSystem.screenPadding(80)
         that.redraw()
       },
 
