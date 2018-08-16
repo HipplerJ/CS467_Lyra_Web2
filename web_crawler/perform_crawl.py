@@ -59,7 +59,7 @@ def breadth_first_search(state, graph, url):
     current_level = [url]
     next_level = []
     depth = 0
-    while depth < state.depth:
+    while depth <= state.depth:
         for x in range(len(current_level)):
             soup = get_html(current_level[x])                                   # Graph URL HTML information and parse as BeautifulSoup Object
             if soup:
@@ -73,9 +73,11 @@ def breadth_first_search(state, graph, url):
                 if edge_list:
                     good_node(graph, title, current_level[x], state)
                     next_level.extend(edge_list)
-                    for y in range(len(edge_list)):
-                        good_node(graph, edge_list[y], edge_list[y], state)
-                        graph.add_edges(edge_list[y], current_level[x])
+                    if depth < state.depth:
+                        for y in range(len(edge_list)):
+                            good_node(graph, edge_list[y], edge_list[y], state)
+                            graph.add_edges(current_level[x],edge_list[y])
+                            graph.add_edges(edge_list[y],current_level[x])
                 else:
                     no_links_node(graph, title, current_level[x], state)
             else:
