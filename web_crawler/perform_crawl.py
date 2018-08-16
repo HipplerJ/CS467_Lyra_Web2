@@ -78,10 +78,8 @@ def breadth_first_search(state, graph, url):
                         good_node(graph, edge_list[y], edge_list[y], state)
                         graph.add_edges(edge_list[y], current_level[x])
                 else:
-                    print("NO LINK")
                     no_links_node(graph, title, current_level[x], state)
             else:
-                print("NO PAGE")
                 invalid_url(graph, current_level[x])
                 graph.add_edges(current_level[x], edge_list[y])
         current_level = next_level
